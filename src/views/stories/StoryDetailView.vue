@@ -3,7 +3,6 @@
     <div v-if="loading" class="text-center text-xl">Loading story...</div>
 
     <template v-else-if="story">
-      <!-- Story Header -->
       <div class="space-y-4">
         <h1 class="text-4xl font-bold">{{ story.title }}</h1>
         <div class="flex items-center space-x-4 text-gray-600">
@@ -13,19 +12,13 @@
         </div>
       </div>
 
-      <!-- Story Image -->
       <img v-if="story.photoUrl" :src="story.photoUrl" :alt="story.title" class="w-full rounded-lg shadow-lg" />
 
-      <!-- Story Content -->
-      <div class="prose max-w-none text-lg leading-relaxed">
-        {{ story.content }}
-      </div>
+      <div class="prose max-w-none text-lg leading-relaxed" v-html="story.content"></div>
 
-      <!-- Comments Section -->
       <div class="border-t pt-8">
         <h2 class="text-2xl font-bold mb-6">Comments</h2>
 
-        <!-- Comment Form -->
         <div v-if="auth.isAuthenticated()" class="mb-8">
           <form @submit.prevent="handleCommentSubmit" class="space-y-4">
             <div>
@@ -47,7 +40,6 @@
           <router-link to="/login" class="text-blue-600 hover:text-blue-800">Log in to comment</router-link>
         </div>
 
-        <!-- Comments List -->
         <div class="space-y-6">
           <div v-for="comment in comments" :key="comment.id" class="bg-gray-50 p-4 rounded-lg">
             <div class="flex justify-between items-start">
@@ -112,3 +104,20 @@ onMounted(() => {
   fetchStory();
 });
 </script>
+
+<style>
+.prose {
+  max-width: 65ch;
+  margin: 0 auto;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.prose p {
+  margin-bottom: 1.5em;
+}
+</style>

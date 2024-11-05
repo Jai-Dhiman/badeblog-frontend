@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --primary-font-size: 16px;
+}
+
+body {
+  @apply text-gray-900;
+  font-size: var(--primary-font-size);
+  line-height: 1.6;
+}
+
+/* Focus styles */
+*:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Large click targets */
+button,
+a {
+  @apply min-h-[44px] min-w-[44px];
+}

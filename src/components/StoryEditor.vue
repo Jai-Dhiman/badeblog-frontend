@@ -21,12 +21,7 @@
 
     <div>
       <label class="block text-lg font-medium text-gray-700 mb-2">Story</label>
-      <textarea
-        v-model="content"
-        rows="10"
-        class="w-full p-3 text-lg border-2 border-gray-300 rounded-lg"
-        placeholder="Write your story here..."
-      ></textarea>
+      <QuillEditor v-model:content="content" contentType="html" theme="snow" toolbar="full" class="h-64 mb-12" />
     </div>
 
     <div>
@@ -53,6 +48,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { categoryApi } from "@/services/api";
 import type { Category } from "@/types";
 
@@ -78,3 +75,11 @@ const handlePhotoChange = (event: Event) => {
   }
 };
 </script>
+
+<style>
+.ql-editor {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  min-height: 200px;
+}
+</style>

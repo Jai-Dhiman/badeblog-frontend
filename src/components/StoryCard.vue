@@ -3,12 +3,10 @@
     class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
     :class="{ 'border-2 border-blue-600': isHighlighted }"
   >
-    <!-- Story Image -->
     <div v-if="story.photoUrl" class="mb-4">
       <img :src="story.photoUrl" :alt="story.title" class="w-full h-48 object-cover rounded-lg" loading="lazy" />
     </div>
 
-    <!-- Story Header -->
     <header class="mb-4">
       <h2 class="text-2xl font-bold mb-2 text-gray-900">
         {{ story.title }}
@@ -22,14 +20,12 @@
       </div>
     </header>
 
-    <!-- Story Preview -->
     <div class="mb-4">
       <p class="text-lg text-gray-700 line-clamp-3">
-        {{ truncateText(story.content) }}
+        {{ stripHtml(truncateText(story.content)) }}
       </p>
     </div>
 
-    <!-- Card Footer -->
     <footer class="flex justify-between items-center">
       <router-link :to="`/stories/${story.id}`" class="text-lg text-blue-600 hover:text-blue-800 hover:underline">
         Read more
@@ -48,6 +44,12 @@
 <script setup lang="ts">
 import { formatDate, truncateText } from "@/utils/helpers";
 import type { Story } from "@/types";
+
+const stripHtml = (html: string) => {
+  const tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+};
 
 defineProps<{
   story: Story;

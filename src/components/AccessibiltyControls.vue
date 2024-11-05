@@ -36,6 +36,18 @@
         </div>
       </div>
 
+      <!--Font Family Control -->
+      <div class="space-y-2">
+        <p class="text-lg font-medium text-gray-700">Font Family</p>
+        <button
+          @click="toggleFontFamily"
+          class="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-lg"
+          :class="{ 'bg-blue-600 text-white hover:bg-blue-700': isSansSerif }"
+        >
+          Sans-serif Font
+        </button>
+      </div>
+
       <!-- Contrast Controls -->
       <div class="space-y-2">
         <p class="text-lg font-medium text-gray-700">Contrast</p>
@@ -69,6 +81,7 @@ import { ref } from "vue";
 const isOpen = ref(false);
 const isHighContrast = ref(false);
 const isLargeLineHeight = ref(false);
+const isSansSerif = ref(false);
 
 const increaseFontSize = () => {
   const root = document.documentElement;
@@ -83,6 +96,11 @@ const decreaseFontSize = () => {
     // prevent too small font size
     root.style.fontSize = `${currentSize - 2}px`;
   }
+};
+
+const toggleFontFamily = () => {
+  isSansSerif.value = !isSansSerif.value;
+  document.body.classList.toggle("sans-serif-font");
 };
 
 const toggleHighContrast = () => {
@@ -114,5 +132,9 @@ const toggleLineHeight = () => {
 
 .large-line-height p {
   margin-bottom: 1.5em !important;
+}
+
+.sans-serif-font {
+  font-family: Arial, sans-serif !important;
 }
 </style>
