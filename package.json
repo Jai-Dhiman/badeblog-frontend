@@ -10,14 +10,14 @@
     "lint:fix": "eslint --ext .ts,.tsx,.vue src --fix"
   },
   "dependencies": {
+    "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.7.7",
     "core-js": "^3.8.3",
     "jwt-decode": "^4.0.0",
     "quill": "^2.0.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0",
-    "@vueup/vue-quill": "^1.2.0"
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",

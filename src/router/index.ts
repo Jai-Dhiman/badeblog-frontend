@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/stories/:id",
     name: "story-detail",
     component: () => import("../views/stories/StoryDetailView.vue"),
-  }
+  },
 ];
 
 const router = createRouter({
@@ -42,11 +42,11 @@ const router = createRouter({
 
 // Navigation guard
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = localStorage.getItem('token');
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const isAuthenticated = localStorage.getItem("token");
 
   if (requiresAuth && !isAuthenticated) {
-    next('/login');
+    next("/login");
   } else {
     next();
   }
