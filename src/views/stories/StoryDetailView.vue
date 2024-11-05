@@ -95,10 +95,10 @@ const fetchStory = async () => {
 };
 
 const handleCommentSubmit = async () => {
-  if (!newComment.value.trim()) return;
+  if (!story.value || !newComment.value.trim()) return;
 
   try {
-    const response = await storyApi.addComment(story.value!.id, {
+    const response = await storyApi.addComment(story.value.id, {
       content: newComment.value,
     });
     comments.value.unshift(response.data);

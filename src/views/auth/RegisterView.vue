@@ -62,12 +62,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from "@/composables/useAuth";
-import { authAPI } from "@/services/api";
+import { auth } from "@/services/auth";
 
 const router = useRouter();
-const { setToken, setUser } = useAuth();
-
 const name = ref("");
 const email = ref("");
 const password = ref("");
@@ -81,30 +78,17 @@ const handleSubmit = async () => {
     return;
   }
 
-  if (password.value.length < 6) {
-    errorMessage.value = "Password must be at least 6 characters long";
-    return;
-  }
-
   try {
     isLoading.value = true;
     errorMessage.value = "";
-
-    const response = await authAPI.register({
+    await auth.register({
       name: name.value,
       email: email.value,
       password: password.value,
-      password_confirmation: passwordConfirmation.value,
     });
-
-    setToken(response.data.token);
-    setUser(response.data.user);
-
     router.push("/stories");
   } catch (error: any) {
-    const errors = error.response?.data?.errors;
-    errorMessage.value = Array.isArray(errors) ? errors.join("\n") : "Registration failed. Please try again.";
-    console.error("Registration failed:", error);
+    errorMessage.value = error.response?.data?.errors?.join(". ") || "Registration failed";
   } finally {
     isLoading.value = false;
   }

@@ -5,7 +5,7 @@
     <div class="flex flex-wrap gap-3">
       <!-- All Stories Button -->
       <button
-        @click="handleSelect(undefined)"
+        @click="$emit('select', undefined)"
         class="px-4 py-2 rounded-lg text-lg transition-colors"
         :class="[!selectedId ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200']"
       >
@@ -16,7 +16,7 @@
       <button
         v-for="category in categories"
         :key="category.id"
-        @click="handleSelect(category.id)"
+        @click="$emit('select', category.id)"
         class="px-4 py-2 rounded-lg text-lg transition-colors"
         :class="[selectedId === category.id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200']"
       >
@@ -24,10 +24,8 @@
       </button>
     </div>
 
-    <!-- Loading State -->
     <div v-if="loading" class="text-lg text-gray-600">Loading categories...</div>
 
-    <!-- Error State -->
     <div v-if="error" class="text-lg text-red-600">
       {{ error }}
     </div>
@@ -40,21 +38,17 @@ import { categoryApi } from "@/services/api";
 import { handleApiError } from "@/utils/helpers";
 import type { Category } from "@/types";
 
-const props = defineProps<{
+defineProps<{
   selectedId?: number;
 }>();
 
-const emit = defineEmits<{
-  (e: "select", id: number | undefined): void;
+defineEmits<{
+  select: [id: number | undefined];
 }>();
 
 const categories = ref<Category[]>([]);
 const loading = ref(true);
 const error = ref("");
-
-const handleSelect = (categoryId: number | undefined) => {
-  emit("select", categoryId);
-};
 
 onMounted(async () => {
   try {

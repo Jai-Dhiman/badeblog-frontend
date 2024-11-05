@@ -1,4 +1,5 @@
 import api from "./api";
+import type { User } from "@/types";
 
 export const auth = {
   token: localStorage.getItem("token"),
@@ -18,7 +19,7 @@ export const auth = {
     return response.data.user;
   },
 
-  async register(userData: any) {
+  async register(userData: { email: string; password: string; name: string }) {
     const response = await api.post("/users", { user: userData });
     this.setToken(response.data.token);
     return response.data.user;

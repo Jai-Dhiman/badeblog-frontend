@@ -49,17 +49,18 @@
 import { formatDate, truncateText } from "@/utils/helpers";
 import type { Story } from "@/types";
 
-const props = defineProps<{
+defineProps<{
   story: Story;
   isHighlighted?: boolean;
 }>();
 </script>
 
-<style scoped>
+<style>
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  line-clamp: 3;
 }
 </style>

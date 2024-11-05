@@ -51,7 +51,7 @@ const fetchStories = async (categoryId?: number) => {
   }
 };
 
-const handleCategorySelect = (categoryId: number) => {
+const handleCategorySelect = (categoryId: number | undefined) => {
   selectedCategoryId.value = categoryId;
   fetchStories(categoryId);
 };

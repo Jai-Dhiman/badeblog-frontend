@@ -47,12 +47,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from "@/composables/useAuth";
-import { authAPI } from "@/services/api";
+import { auth } from "@/services/auth";
 
 const router = useRouter();
-const { setToken, setUser } = useAuth();
-
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
@@ -62,21 +59,10 @@ const handleSubmit = async () => {
   try {
     isLoading.value = true;
     errorMessage.value = "";
-
-    const response = await authAPI.login(email.value, password.value);
-
-    setToken(response.data.jwt);
-    setUser({
-      id: response.data.user_id,
-      email: response.data.email,
-      role: response.data.role,
-      name: response.data.name,
-    });
-
+    await auth.login(email.value, password.value);
     router.push("/stories");
   } catch (error: any) {
-    errorMessage.value = error.response?.data?.error || "Login failed. Please check your credentials and try again.";
-    console.error("Login failed:", error);
+    errorMessage.value = error.response?.data?.error || "Login failed";
   } finally {
     isLoading.value = false;
   }
