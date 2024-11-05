@@ -8,18 +8,48 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView,
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/login",
+    name: "login",
+    component: () => import("../views/auth/LoginView.vue"),
   },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("../views/auth/RegisterView.vue"),
+  },
+  {
+    path: "/stories",
+    name: "stories",
+    component: () => import("../views/stories/StoriesView.vue"),
+  },
+  {
+    path: "/stories/new",
+    name: "new-story",
+    component: () => import("../views/stories/NewStoryView.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/stories/:id",
+    name: "story-detail",
+    component: () => import("../views/stories/StoryDetailView.vue"),
+  }
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+// Navigation guard
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = localStorage.getItem('token');
+
+  if (requiresAuth && !isAuthenticated) {
+    next('/login');
+  } else {
+    next();
+  }
 });
 
 export default router;

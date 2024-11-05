@@ -19,7 +19,7 @@ export default createStore<State>({
     isLoggedIn: false,
     token: localStorage.getItem("token"),
   },
-  
+
   mutations: {
     setUser(state, user: User | null) {
       state.user = user;
@@ -34,7 +34,7 @@ export default createStore<State>({
       }
     },
   },
-  
+
   actions: {
     logout({ commit }) {
       commit("setToken", null);
