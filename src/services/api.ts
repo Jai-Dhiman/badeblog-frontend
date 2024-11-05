@@ -1,30 +1,28 @@
-import axios from 'axios'
-import type { Story, User } from '@/types'
+import axios from "axios";
+import { auth } from "./auth";
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api/v1'
-})
+  baseURL: "/api/v1",
+});
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  if (auth.token) {
+    config.headers.Authorization = `Bearer ${auth.token}`;
   }
-  return config
-})
+  return config;
+});
 
-export const authAPI = {
-  login: (email: string, password: string) => 
-    api.post<{token: string, user: User}>('/sessions', { email, password }),
-  register: (userData: Partial<User>) => 
-    api.post<{token: string, user: User}>('/users', { user: userData })
-}
+export const storyApi = {
+  getAll: () => api.get("/stories"),
+  get: (id: number) => api.get(`/stories/${id}`),
+  create: (formData: FormData) => api.post("/stories", formData),
+  update: (id: number, formData: FormData) => api.put(`/stories/${id}`, formData),
+  delete: (id: number) => api.delete(`/stories/${id}`),
+};
 
-export const storiesAPI = {
-  getAll: () => api.get<Story[]>('/stories'),
-  get: (id: number) => api.get<Story>(`/stories/${id}`),
-  create: (story: Partial<Story>) => api.post<Story>('/stories', { story }),
-  update: (id: number, story: Partial<Story>) => 
-    api.put<Story>(`/stories/${id}`, { story }),
-  delete: (id: number) => api.delete(`/stories/${id}`)
-}
+export const categoryApi = {
+  getAll: () => api.get("/categories"),
+  getStories: (id: number) => api.get(`/categories/${id}/stories`),
+};
+
+export default api;

@@ -1,29 +1,62 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Stories</h1>
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <div v-for="story in stories" :key="story.id" class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-xl font-bold mb-2">{{ story.title }}</h2>
-        <p class="text-gray-600 mb-4">{{ story.content.substring(0, 150) }}...</p>
-        <router-link :to="`/stories/${story.id}`" class="text-blue-600 hover:text-blue-800">Read more</router-link>
-      </div>
+  <div class="space-y-8">
+    <!-- Header Section -->
+    <div class="flex justify-between items-center">
+      <h1 class="text-3xl font-bold">Stories</h1>
+      <router-link
+        v-if="auth.isAuthenticated()"
+        to="/stories/new"
+        class="px-6 py-3 text-lg bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+      >
+        Write New Story
+      </router-link>
+    </div>
+
+    <!-- Categories Filter -->
+    <CategoryList :selectedId="selectedCategoryId" @select="handleCategorySelect" />
+
+    <!-- Stories Grid -->
+    <div v-if="loading" class="text-center text-xl">Loading stories...</div>
+
+    <div v-else-if="stories.length === 0" class="text-center text-xl">No stories found.</div>
+
+    <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <StoryCard v-for="story in stories" :key="story.id" :story="story" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { storiesAPI } from "@/services/api";
+import { storyApi, categoryApi } from "@/services/api";
+import { auth } from "@/services/auth";
+import { handleApiError } from "@/utils/helpers";
+import CategoryList from "@/components/CategoryList.vue";
+import StoryCard from "@/components/StoryCard.vue";
 import type { Story } from "@/types";
 
 const stories = ref<Story[]>([]);
+const loading = ref(true);
+const selectedCategoryId = ref<number>();
 
-onMounted(async () => {
+const fetchStories = async (categoryId?: number) => {
   try {
-    const response = await storiesAPI.getAll();
+    loading.value = true;
+    const response = categoryId ? await categoryApi.getStories(categoryId) : await storyApi.getAll();
     stories.value = response.data;
   } catch (error) {
-    console.error("Failed to fetch stories:", error);
+    alert(handleApiError(error));
+  } finally {
+    loading.value = false;
   }
+};
+
+const handleCategorySelect = (categoryId: number) => {
+  selectedCategoryId.value = categoryId;
+  fetchStories(categoryId);
+};
+
+onMounted(() => {
+  fetchStories();
 });
 </script>
