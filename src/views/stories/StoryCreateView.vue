@@ -1,3 +1,14 @@
+<template>
+  <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-8">Create New Story</h1>
+
+    <div v-if="error" class="text-red-600 mb-4">{{ error }}</div>
+
+    <!-- Add the StoryEditor component here -->
+    <StoryEditor @save="handleSave" />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";

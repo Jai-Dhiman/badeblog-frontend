@@ -1,5 +1,5 @@
 import api from "./api";
-import type { User } from "@/types";
+// import type { User } from "@/types";
 
 export const auth = {
   token: localStorage.getItem("token"),
