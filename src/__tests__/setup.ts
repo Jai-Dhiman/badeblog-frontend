@@ -21,7 +21,18 @@ config.global.stubs = {
   'router-view': true
 }
 
-// Clean up
+beforeAll(() => {
+  // Any setup you need before all tests
+})
+
 beforeEach(() => {
   jest.clearAllMocks()
+})
+
+afterEach(() => {
+  // Any cleanup after each test
+})
+
+afterAll(() => {
+  // Any cleanup after all tests
 })

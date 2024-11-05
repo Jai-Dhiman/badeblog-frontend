@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 import StoryCard from '@/components/StoryCard.vue'
 import { formatDate, truncateText } from '@/utils/helpers'
 import type { Story } from '@/types'
+import { describe, it, expect } from '@jest/globals'
 
 describe('StoryCard.vue', () => {
   const mockStory: Story = {

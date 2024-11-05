@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import StoryEditor from '@/components/StoryEditor.vue'
 import type { StoryFormData } from '@/types'
+import { describe, it, expect } from '@jest/globals'
 
 describe('StoryEditor.vue', () => {
   it('emits save event with correct data', async () => {
