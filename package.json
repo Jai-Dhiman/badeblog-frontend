@@ -7,7 +7,10 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "lint:fix": "eslint --ext .ts,.tsx,.vue src --fix"
+    "lint:fix": "eslint --ext .ts,.tsx,.vue src --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@vueup/vue-quill": "^1.2.0",
@@ -19,7 +22,7 @@
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.5.2",
     "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -32,21 +35,22 @@
     "@vue/cli-service": "~5.0.0",
     "@vue/eslint-config-typescript": "^9.1.0",
     "@vue/runtime-core": "^3.5.12",
-    "@vue/test-utils": "^2.0.0-0",
-    "@vue/vue3-jest": "^27.0.0-alpha.1",
+    "@vue/test-utils": "^2.4.0-alpha.2",
+    "@vue/vue3-jest": "^27.0.0",
     "autoprefixer": "^10.4.20",
     "babel-jest": "^27.0.6",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.0.3",
-    "jest": "^27.0.5",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
     "postcss": "^8.4.47",
     "prettier": "^2.4.1",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
     "tailwindcss": "^3.4.14",
-    "ts-jest": "^27.0.4",
+    "ts-jest": "^27.1.5",
     "typescript": "~4.5.5"
   }
 }
