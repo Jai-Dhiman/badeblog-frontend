@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals'
 import { auth } from '@/services/auth'
-import type { JestMockFunction } from '../types'
+import type { ApiMockFunction } from '../types'
 
 type AuthResponse = {
   token: string;
@@ -10,13 +10,15 @@ type AuthResponse = {
   };
 }
 
-const mockPost: JestMockFunction<AuthResponse> = jest.fn();
-
 jest.mock('@/services/api', () => ({
   default: {
     post: mockPost
   }
-}))
+}));
+
+const mockPost: ApiMockFunction<AuthResponse> = jest.fn();
+const api = jest.requireMock('@/services/api').default;
+Object.assign(mockPost, api.post);
 
 describe('auth service', () => {
   beforeEach(() => {
@@ -37,6 +39,10 @@ describe('auth service', () => {
     
     const result = await auth.login('test@test.com', 'password')
     
+    expect(mockPost).toHaveBeenCalledWith('/sessions', {
+      email: 'test@test.com',
+      password: 'password'
+    })
     expect(auth.token).toBe(mockResponseData.data.token)
     expect(result).toEqual(mockResponseData.data.user)
   })

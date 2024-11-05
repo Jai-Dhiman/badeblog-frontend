@@ -2,16 +2,18 @@ import { describe, it, expect, beforeEach, jest } from '@jest/globals'
 import { mount } from '@vue/test-utils'
 import StoriesView from '@/views/stories/StoriesView.vue'
 import type { Story } from '@/types'
-import type { JestMockFunction } from '../types'
+import type { ApiMockFunction } from '../types'
 import { createRouter, createWebHistory } from 'vue-router'
-
-const mockGetAll: JestMockFunction<Story[]> = jest.fn();
 
 jest.mock('@/services/api', () => ({
   storyApi: {
     getAll: mockGetAll
   }
-}))
+}));
+
+const mockGetAll: ApiMockFunction<Story[]> = jest.fn();
+
+window.alert = jest.fn();
 
 const router = createRouter({
   history: createWebHistory(),
@@ -20,7 +22,7 @@ const router = createRouter({
     { path: '/stories', component: {} },
     { path: '/stories/:id', component: {} }
   ]
-})
+});
 
 describe('StoriesView.vue', () => {
   const mockStories: Story[] = [
@@ -44,7 +46,7 @@ describe('StoriesView.vue', () => {
       createdAt: '2024-11-05T00:00:00.000Z',
       updatedAt: '2024-11-05T00:00:00.000Z'
     }
-  ]
+  ];
 
   beforeEach(() => {
     mockGetAll.mockReset()
@@ -56,15 +58,18 @@ describe('StoriesView.vue', () => {
       global: {
         plugins: [router],
         stubs: {
-          'router-link': true,
+          RouterLink: true,
+          RouterView: true,
           StoryCard: {
-            template: '<div class="story-card">{{ props.story.title }}</div>',
+            name: 'StoryCard',
+            template: '<div class="story-card">{{ story.title }}</div>',
             props: ['story']
           }
         }
       }
     })
 
+    // Wait for stories to load
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
 

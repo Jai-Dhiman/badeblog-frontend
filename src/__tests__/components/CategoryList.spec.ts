@@ -2,14 +2,17 @@ import { describe, it, expect, jest } from '@jest/globals'
 import { mount } from '@vue/test-utils'
 import CategoryList from '@/components/CategoryList.vue'
 import type { Category } from '@/types'
-import type { JestMockFunction } from '../types'
+import type { ApiMockFunction } from '../types'
 
-const mockGetAll: JestMockFunction<Category[]> = jest.fn();
 jest.mock('@/services/api', () => ({
   categoryApi: {
     getAll: mockGetAll
   }
-}))
+}));
+
+const mockGetAll: ApiMockFunction<Category[]> = jest.fn();
+const { categoryApi } = jest.requireMock('@/services/api');
+Object.assign(mockGetAll, categoryApi.getAll);
 
 describe('CategoryList.vue', () => {
   const mockCategories: Category[] = [
@@ -30,11 +33,13 @@ describe('CategoryList.vue', () => {
     })
     
     await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
 
-    const categoryButton = wrapper.find('button:last-child')
-    await categoryButton.trigger('click')
+    const buttons = wrapper.findAll('button')
+    const lastButton = buttons[buttons.length - 1]
+    await lastButton.trigger('click')
     
     expect(wrapper.emitted()).toHaveProperty('select')
-    expect(wrapper.emitted().select[0]).toEqual([2])
+    expect(wrapper.emitted().select[0]).toEqual([mockCategories[1].id])
   })
 })

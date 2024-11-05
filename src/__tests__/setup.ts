@@ -1,6 +1,18 @@
 import { config } from '@vue/test-utils'
 import { createRouter, createWebHistory } from 'vue-router'
 
+// Add router mock before router creation
+jest.mock('vue-router', () => ({
+  createRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    go: jest.fn()
+  })),
+  createWebHistory: jest.fn()
+}));
+
 // Create router instance
 const router = createRouter({
   history: createWebHistory(),

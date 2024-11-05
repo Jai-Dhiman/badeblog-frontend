@@ -1,19 +1,14 @@
+// src/__tests__/types.ts
 import type { Story, Category, User } from '@/types'
 
 export type ApiResponse<T> = {
   data: T
 }
 
-export type JestMockFunction<T = any> = {
-  (...args: any[]): Promise<ApiResponse<T>>;
-  mockClear: () => void;
+export interface ApiMockFunction<T = any> {
+  (args?: any): Promise<ApiResponse<T>>;
+  mockResolvedValue: (value: ApiResponse<T>) => ApiMockFunction<T>;
   mockReset: () => void;
-  mockResolvedValue: (value: ApiResponse<T>) => void;
-  mockRejectedValue: (value: any) => void;
+  mockClear: () => void;
+  mockImplementation: (fn: () => Promise<ApiResponse<T>>) => ApiMockFunction<T>;
 }
-
-export type StoryResponse = ApiResponse<Story>
-export type StoriesResponse = ApiResponse<Story[]>
-export type CategoryResponse = ApiResponse<Category>
-export type CategoriesResponse = ApiResponse<Category[]>
-export type UserResponse = ApiResponse<User>
