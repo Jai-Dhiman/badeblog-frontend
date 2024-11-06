@@ -56,6 +56,20 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { computed } from "vue";
+import { auth } from "./services/auth";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const isLoggedIn = computed(() => auth.isAuthenticated());
+
+const logout = () => {
+  auth.logout();
+  router.push("/login");
+};
+</script>
+
 <style>
 :root {
   --primary-font-size: 16px;

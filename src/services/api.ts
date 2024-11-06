@@ -1,37 +1,26 @@
 import axios from "axios";
-import { auth } from "./auth";
-import type { Story, Comment } from "@/types";
 
 const api = axios.create({
-  baseURL: "/api/v1",
+  baseURL: 'http://localhost:3000/api/v1',
 });
 
+// Simple interceptor that reads token directly from localStorage
 api.interceptors.request.use((config) => {
-  if (auth.token) {
-    config.headers.Authorization = `Bearer ${auth.token}`;
+  const token = localStorage.getItem('token');
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
 export const storyApi = {
-  getAll: () => api.get<Story[]>("/stories"),
-  get: (id: number) => api.get<Story>(`/stories/${id}`),
-  create: (formData: FormData) => {
-    if (formData.has('story[content]')) {
-      const content = formData.get('story[content]');
-      formData.set('story[content]', content as string);
-    }
-    return api.post<Story>("/stories", formData);
-  },
-  update: (id: number, formData: FormData) => {
-    if (formData.has('story[content]')) {
-      const content = formData.get('story[content]');
-      formData.set('story[content]', content as string);
-    }
-    return api.put<Story>(`/stories/${id}`, formData);
-  },
-  getComments: (storyId: number) => api.get<Comment[]>(`/stories/${storyId}/comments`),
-  addComment: (storyId: number, data: { content: string }) => api.post<Comment>(`/stories/${storyId}/comments`, data),
+  getAll: () => api.get("/stories"),
+  get: (id: number) => api.get(`/stories/${id}`),
+  create: (formData: FormData) => api.post("/stories", formData),
+  update: (id: number, formData: FormData) => api.put(`/stories/${id}`, formData),
+  getComments: (storyId: number) => api.get(`/stories/${storyId}/comments`),
+  addComment: (storyId: number, data: { content: string }) => 
+    api.post(`/stories/${storyId}/comments`, data),
 };
 
 export const categoryApi = {

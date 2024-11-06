@@ -1,11 +1,11 @@
 import api from "./api";
-// import type { User } from "@/types";
 
 export const auth = {
-  token: localStorage.getItem("token"),
+  getToken(): string | null {
+    return localStorage.getItem("token");
+  },
 
-  setToken(token: string | null) {
-    this.token = token;
+  setToken(token: string | null): void {
     if (token) {
       localStorage.setItem("token", token);
     } else {
@@ -14,22 +14,32 @@ export const auth = {
   },
 
   async login(email: string, password: string) {
-    const response = await api.post("/sessions", { email, password });
-    this.setToken(response.data.token);
-    return response.data.user;
+    try {
+      const response = await api.post("/sessions", { email, password });
+      this.setToken(response.data.token);
+      return response.data.user;
+    } catch (error) {
+      this.setToken(null);
+      throw error;
+    }
   },
 
   async register(userData: { email: string; password: string; name: string }) {
-    const response = await api.post("/users", { user: userData });
-    this.setToken(response.data.token);
-    return response.data.user;
+    try {
+      const response = await api.post("/users", { user: userData });
+      this.setToken(response.data.token);
+      return response.data.user;
+    } catch (error) {
+      this.setToken(null);
+      throw error;
+    }
   },
 
-  logout() {
+  logout(): void {
     this.setToken(null);
   },
 
-  isAuthenticated() {
-    return !!this.token;
-  },
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
 };

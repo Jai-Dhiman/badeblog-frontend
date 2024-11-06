@@ -14,4 +14,9 @@ module.exports = {
   transformIgnorePatterns: ["/node_modules/(?!axios)"],
   setupFilesAfterEnv: ["<rootDir>/src/__tests__/setup.ts"],
   testMatch: ["<rootDir>/src/__tests__/**/*.spec.ts"],
+  globals: {
+    "ts-jest": {
+      tsconfig: "tsconfig.json",
+    },
+  },
 };

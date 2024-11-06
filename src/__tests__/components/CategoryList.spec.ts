@@ -4,15 +4,13 @@ import CategoryList from '@/components/CategoryList.vue'
 import type { Category } from '@/types'
 import type { ApiMockFunction } from '../types'
 
+const mockGetAll: ApiMockFunction<Category[]> = jest.fn();
+
 jest.mock('@/services/api', () => ({
   categoryApi: {
     getAll: mockGetAll
   }
 }));
-
-const mockGetAll: ApiMockFunction<Category[]> = jest.fn();
-const { categoryApi } = jest.requireMock('@/services/api');
-Object.assign(mockGetAll, categoryApi.getAll);
 
 describe('CategoryList.vue', () => {
   const mockCategories: Category[] = [

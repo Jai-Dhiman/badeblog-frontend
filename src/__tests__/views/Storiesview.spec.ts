@@ -5,13 +5,13 @@ import type { Story } from '@/types'
 import type { ApiMockFunction } from '../types'
 import { createRouter, createWebHistory } from 'vue-router'
 
+const mockGetAll: ApiMockFunction<Story[]> = jest.fn();
+
 jest.mock('@/services/api', () => ({
   storyApi: {
     getAll: mockGetAll
   }
 }));
-
-const mockGetAll: ApiMockFunction<Story[]> = jest.fn();
 
 window.alert = jest.fn();
 

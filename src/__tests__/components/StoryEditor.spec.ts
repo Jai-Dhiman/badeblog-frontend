@@ -4,15 +4,17 @@ import StoryEditor from '@/components/StoryEditor.vue'
 import type { Category, StoryFormData } from '@/types'
 import type { ApiMockFunction } from '../types'
 
+const mockGetAll: ApiMockFunction<Category[]> = jest.fn();
+const mockCreate: ApiMockFunction<any> = jest.fn();
+
 jest.mock('@/services/api', () => ({
   categoryApi: {
     getAll: mockGetAll
+  },
+  storyApi: {
+    create: mockCreate
   }
 }));
-
-const mockGetAll: ApiMockFunction<Category[]> = jest.fn();
-const { storyApi } = jest.requireMock('@/services/api');
-Object.assign(mockGetAll, storyApi.getAll);
 
 describe('StoryEditor.vue', () => {
   it('emits save event with correct data', async () => {

@@ -6,7 +6,14 @@ declare module "*.vue" {
   export default component;
 }
 
-// Declare the setup script macros
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+
 declare const defineProps: <Props>() => Readonly<Props>;
 declare const defineEmits: <Events>() => Events;
 declare const defineExpose: <Exposed extends Record<string, unknown>>() => void;
