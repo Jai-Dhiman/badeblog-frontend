@@ -3,7 +3,7 @@
     <nav class="bg-primary shadow-md">
       <div class="container mx-auto px-4 py-3">
         <div class="flex justify-between items-center">
-          <router-link to="/" class="text-white text-xl font-bold"> Stories App </router-link>
+          <router-link to="/" class="text-white text-xl font-bold"> Home </router-link>
 
           <div v-if="authStore.user">
             <router-link to="/stories" class="text-white hover:text-gray-200 mr-4">

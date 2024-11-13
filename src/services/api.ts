@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Story } from '@/types'
+import type { Story, Comment } from '@/types'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000',
@@ -30,5 +30,15 @@ export const createStory = async (storyData: Partial<Story>) => {
 
 export const getCategories = async () => {
   const response = await api.get('/categories')
+  return response.data
+}
+
+export const getStory = async (id: number): Promise<Story> => {
+  const response = await api.get(`/stories/${id}`)
+  return response.data
+}
+
+export const getStoryComments = async (storyId: number): Promise<Comment[]> => {
+  const response = await api.get(`/stories/${storyId}/comments`)
   return response.data
 }

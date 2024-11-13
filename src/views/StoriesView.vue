@@ -18,16 +18,14 @@
 
     <div v-else class="space-y-4">
       <div v-for="story in stories" :key="story.id" class="border p-4 rounded shadow">
-        <h2 class="text-xl font-bold">{{ story.title }}</h2>
+        <h2 class="text-xl font-bold">
+          <router-link :to="`/stories/${story.id}`" class="hover:text-accent">
+            {{ story.title }}
+          </router-link>
+        </h2>
         <p class="text-gray-600 mt-2">
-          {{ new Date(story.created_at).toLocaleDateString() }}
+          {{ formatDate(story.created_at) }}
         </p>
-        <router-link
-          :to="`/stories/${story.id}`"
-          class="text-blue-500 hover:underline mt-2 inline-block"
-        >
-          Read more
-        </router-link>
       </div>
     </div>
   </div>
@@ -41,6 +39,15 @@ import type { Story } from '@/types'
 const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
+
+function formatDate(dateString?: string) {
+  if (!dateString) return ''
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
 
 onMounted(async () => {
   try {
