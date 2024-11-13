@@ -1,16 +1,17 @@
 <template>
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-4xl mx-auto p-4">
     <h1 class="text-2xl font-bold mb-6">Write New Story</h1>
 
-    <form @submit.prevent="handleSubmit" class="space-y-4">
+    <form @submit.prevent="handleSubmit" class="space-y-6">
       <div>
-        <label class="block mb-2">Title</label>
-        <input v-model="title" type="text" class="w-full p-2 border rounded" required />
+        <label class="block mb-2 text-lg">Title</label>
+        <input v-model="title" type="text" class="w-full p-3 border rounded-lg text-lg" required />
       </div>
 
       <div>
-        <label class="block mb-2">Category</label>
-        <select v-model="categoryId" class="w-full p-2 border rounded" required>
+        <label class="block mb-2 text-lg">Category</label>
+        <select v-model="categoryId" class="w-full p-3 border rounded-lg text-lg" required>
+          <option value="">Select a category</option>
           <option v-for="category in categories" :key="category.id" :value="category.id">
             {{ category.name }}
           </option>
@@ -18,13 +19,13 @@
       </div>
 
       <div>
-        <label class="block mb-2">Content</label>
-        <textarea v-model="content" rows="10" class="w-full p-2 border rounded" required></textarea>
+        <label class="block mb-2 text-lg">Content</label>
+        <RichTextEditor v-model="content" class="mb-6" />
       </div>
 
       <button
         type="submit"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        class="bg-primary text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors"
         :disabled="loading"
       >
         {{ loading ? 'Saving...' : 'Save Story' }}
@@ -37,6 +38,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { createStory, getCategories } from '@/services/api'
+import RichTextEditor from '@/components/RichTextEditor.vue'
 import type { Category } from '@/types'
 
 const router = useRouter()
@@ -49,8 +51,8 @@ const loading = ref(false)
 onMounted(async () => {
   try {
     categories.value = await getCategories()
-  } catch {
-    console.error('Failed to load categories')
+  } catch (error) {
+    console.error('Failed to load categories:', error)
   }
 })
 
@@ -66,8 +68,8 @@ async function handleSubmit() {
       status: 'published',
     })
     router.push('/stories')
-  } catch {
-    console.error('Failed to create story')
+  } catch (error) {
+    console.error('Failed to create story:', error)
   } finally {
     loading.value = false
   }

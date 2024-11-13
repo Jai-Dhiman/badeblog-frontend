@@ -13,6 +13,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@types/quill": "^2.0.14",
+    "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.7.7",
     "pinia": "^2.2.6",
     "quill": "^2.0.2",

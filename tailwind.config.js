@@ -14,5 +14,5 @@ export default {
       },
     },
   },
-  plugins: [reqiure('@tailwindcss/typography')],
+  plugins: [import('@tailwindcss/typography')],
 }

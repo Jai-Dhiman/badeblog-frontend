@@ -18,9 +18,7 @@
       </div>
 
       <!-- Story Content -->
-      <div class="prose prose-lg max-w-none">
-        {{ story?.content }}
-      </div>
+      <div class="prose prose-lg max-w-none" v-html="story?.content"></div>
 
       <!-- Comments Section -->
       <div class="mt-12 pt-8 border-t">
