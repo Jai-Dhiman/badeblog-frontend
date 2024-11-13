@@ -42,3 +42,13 @@ export const getStoryComments = async (storyId: number): Promise<Comment[]> => {
   const response = await api.get(`/stories/${storyId}/comments`)
   return response.data
 }
+
+export const deleteStory = async (id: number) => {
+  const response = await api.delete(`/stories/${id}`)
+  return response.data
+}
+
+export const createComment = async (storyId: number, data: { content: string }) => {
+  const response = await api.post(`/stories/${storyId}/comments`, data)
+  return response.data
+}

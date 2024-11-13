@@ -18,27 +18,28 @@ const router = createRouter({
       path: '/stories',
       name: 'stories',
       component: () => import('../views/StoriesView.vue'),
-      meta: { requiresAuth: true },
     },
     {
       path: '/stories/new',
       name: 'create-story',
       component: () => import('../views/CreateStoryView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
       path: '/stories/:id',
       name: 'story-view',
       component: () => import('../views/StoryView.vue'),
-      meta: { requiresAuth: true },
     },
   ],
 })
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
+
   if (to.meta.requiresAuth && !authStore.token) {
     next('/login')
+  } else if (to.meta.requiresAdmin && authStore.user?.role !== 'admin') {
+    next('/')
   } else {
     next()
   }
