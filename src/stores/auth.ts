@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = data.jwt
       localStorage.setItem('token', data.jwt)
       return true
-    } catch (error) {
+    } catch {
       return false
     }
   }

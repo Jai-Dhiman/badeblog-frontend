@@ -49,7 +49,7 @@ const loading = ref(false)
 onMounted(async () => {
   try {
     categories.value = await getCategories()
-  } catch (error) {
+  } catch {
     console.error('Failed to load categories')
   }
 })
@@ -66,7 +66,7 @@ async function handleSubmit() {
       status: 'published',
     })
     router.push('/stories')
-  } catch (error) {
+  } catch {
     console.error('Failed to create story')
   } finally {
     loading.value = false

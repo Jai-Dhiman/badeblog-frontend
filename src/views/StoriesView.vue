@@ -45,7 +45,7 @@ const error = ref('')
 onMounted(async () => {
   try {
     stories.value = await getStories()
-  } catch (error) {
+  } catch {
     error.value = 'Failed to load stories'
   } finally {
     loading.value = false
