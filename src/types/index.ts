@@ -1,14 +1,30 @@
+// export interface StoryAttributes {
+//   title: string
+//   content: string
+//   status: 'draft' | 'published'
+//   category_id: number
+//   category?: Category
+//   user_id: number
+//   user?: User
+//   created_at: string
+//   updated_at: string
+// }
+
 export interface Story {
   id: number
-  title: string
-  content: string
-  status: 'draft' | 'published'
-  category_id: number
-  category?: Category
-  user_id: number
-  user?: User
-  created_at: string
-  updated_at: string
+  type: string
+  attributes: {
+    id: number
+    title: string
+    content: string
+    status: 'draft' | 'published'
+    category_id: number
+    category?: Category
+    user_id: number
+    user?: User
+    created_at: string
+    updated_at: string
+  }
 }
 
 export interface User {

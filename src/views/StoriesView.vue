@@ -20,13 +20,19 @@
       <div v-for="story in stories" :key="story.id" class="border p-4 rounded shadow">
         <h2 class="text-xl font-bold">
           <router-link :to="`/stories/${story.id}`" class="hover:text-accent">
-            {{ story.title }}
+            {{ story.attributes.title }}
           </router-link>
         </h2>
         <p class="text-gray-600 mt-2">
-          {{ formatDate(story.created_at) }}
+          {{ formatDate(story.attributes.created_at) }}
         </p>
       </div>
+    </div>
+
+    <!-- Debug output -->
+    <div v-if="stories.length > 0" class="mt-8 p-4 bg-gray-100">
+      <p class="font-bold mb-2">Debug - First Story Data:</p>
+      <pre>{{ JSON.stringify(stories[0], null, 2) }}</pre>
     </div>
   </div>
 </template>
@@ -40,8 +46,7 @@ const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
 
-function formatDate(dateString?: string) {
-  if (!dateString) return ''
+function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -51,9 +56,15 @@ function formatDate(dateString?: string) {
 
 onMounted(async () => {
   try {
-    stories.value = await getStories()
-  } catch {
-    error.value = 'Failed to load stories'
+    loading.value = true
+    console.log('Fetching stories...')
+    const data = await getStories()
+    console.log('Received stories:', data)
+    stories.value = Array.isArray(data) ? data : []
+    console.log('Processed stories:', stories.value)
+  } catch (err) {
+    console.error('Failed to load stories:', err)
+    error.value = err instanceof Error ? err.message : 'Failed to load stories'
   } finally {
     loading.value = false
   }

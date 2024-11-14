@@ -15,17 +15,13 @@
         </router-link>
       </div>
 
-      <div v-if="loading" class="text-center py-4">
-        <p>Loading stories...</p>
-      </div>
+      <div v-if="loading" class="text-center py-4">Loading stories...</div>
 
       <div v-else-if="error" class="text-red-500 text-center py-4">
         {{ error }}
       </div>
 
-      <div v-else-if="stories.length === 0" class="text-center py-4">
-        <p>No stories have been shared yet.</p>
-      </div>
+      <div v-if="stories.length === 0" class="text-center py-4">No stories found.</div>
 
       <div v-else class="space-y-8">
         <article
@@ -33,21 +29,19 @@
           :key="story.id"
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
-          <router-link :to="`/stories/${story.id}`" class="block">
-            <h2 class="text-2xl font-bold mb-2 text-primary hover:text-accent">
-              {{ story.title }}
-            </h2>
-          </router-link>
+          <h2 class="text-2xl font-bold mb-2">
+            {{ story.attributes?.title || 'Untitled' }}
+          </h2>
 
           <div class="flex items-center text-gray-600 text-sm mb-4">
-            <span>{{ formatDate(story.created_at) }}</span>
+            <span>{{ formatDate(story.attributes?.created_at) }}</span>
             <span class="mx-2">•</span>
-            <span>{{ story.category?.name }}</span>
+            <span>{{ story.attributes?.category?.name || 'Uncategorized' }}</span>
           </div>
 
           <div
             class="prose prose-sm line-clamp-3 mb-4"
-            v-html="truncateContent(story.content)"
+            v-html="story.attributes?.content || ''"
           ></div>
 
           <router-link
@@ -64,9 +58,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useAuthStore } from '@/stores/auth'
 import { getStories } from '@/services/api'
 import type { Story } from '@/types'
+import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 const stories = ref<Story[]>([])
@@ -82,19 +76,17 @@ function formatDate(dateString?: string) {
   })
 }
 
-function truncateContent(content?: string) {
-  if (!content) return ''
-  // Strip HTML tags and truncate to ~200 characters
-  const strippedContent = content.replace(/<[^>]*>/g, '')
-  return strippedContent.length > 200 ? strippedContent.slice(0, 200) + '...' : strippedContent
-}
-
 onMounted(async () => {
   try {
-    stories.value = await getStories()
+    loading.value = true
+    console.log('Fetching stories...')
+    const data = await getStories()
+    console.log('Received stories:', data)
+    stories.value = Array.isArray(data) ? data : []
+    console.log('Processed stories:', stories.value)
   } catch (err) {
-    error.value = 'Failed to load stories'
-    console.error(err)
+    console.error('Error loading stories:', err)
+    error.value = err instanceof Error ? err.message : 'Failed to load stories'
   } finally {
     loading.value = false
   }

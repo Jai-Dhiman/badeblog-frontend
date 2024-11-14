@@ -34,7 +34,7 @@
       </div>
 
       <!-- Story Content -->
-      <div class="prose prose-lg max-w-none" v-html="story?.content"></div>
+      <div class="prose prose-lg max-w-none" v-html="story?.content || ''"></div>
 
       <!-- Comments Section -->
       <div class="mt-12 pt-8 border-t">
@@ -89,6 +89,15 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type { Story, Comment } from '@/types'
 import { getStory, getStoryComments, deleteStory, createComment } from '@/services/api'
+
+// interface RichTextContent {
+//   html?: string
+//   raw?: string
+// }
+
+// function isRichTextContent(content: string | RichTextContent): content is RichTextContent {
+//   return typeof content === 'object' && ('html' in content || 'raw' in content)
+// }
 
 const route = useRoute()
 const router = useRouter()

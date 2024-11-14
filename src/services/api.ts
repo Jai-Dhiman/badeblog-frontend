@@ -19,8 +19,14 @@ export const login = async (email: string, password: string) => {
 }
 
 export const getStories = async () => {
-  const response = await api.get('/stories')
-  return response.data
+  try {
+    const response = await api.get('/stories')
+    console.log('Raw API response:', response)
+    return response.data.data || []
+  } catch (error) {
+    console.error('API Error:', error)
+    throw error
+  }
 }
 
 export const createStory = async (storyData: Partial<Story>) => {
@@ -35,7 +41,7 @@ export const getCategories = async () => {
 
 export const getStory = async (id: number): Promise<Story> => {
   const response = await api.get(`/stories/${id}`)
-  return response.data
+  return response.data.data || response.data
 }
 
 export const getStoryComments = async (storyId: number): Promise<Comment[]> => {
