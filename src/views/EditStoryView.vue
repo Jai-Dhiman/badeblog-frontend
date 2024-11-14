@@ -51,6 +51,14 @@ const categoryId = ref<number>()
 const categories = ref<Category[]>([])
 const loading = ref(true)
 
+function stripTrixContent(content: string): string {
+  if (!content) return ''
+  const temp = document.createElement('div')
+  temp.innerHTML = content
+  const trixContent = temp.querySelector('.trix-content')
+  return trixContent ? trixContent.innerHTML : content
+}
+
 onMounted(async () => {
   try {
     const [storyData, categoriesData] = await Promise.all([
@@ -58,8 +66,10 @@ onMounted(async () => {
       getCategories(),
     ])
 
+    const cleanContent = stripTrixContent(storyData.attributes.content)
+
     title.value = storyData.attributes.title
-    content.value = storyData.attributes.content
+    content.value = cleanContent
     categoryId.value = storyData.attributes['category-id']
     categories.value = Array.isArray(categoriesData) ? categoriesData : []
   } catch (error) {

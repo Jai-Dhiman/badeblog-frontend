@@ -15,9 +15,9 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
-      path: '/stories',
-      name: 'stories',
-      component: () => import('../views/StoriesView.vue'),
+      path: '/stories/:id',
+      name: 'story-view',
+      component: () => import('../views/StoryView.vue'),
     },
     {
       path: '/stories/new',
@@ -26,15 +26,35 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
-      path: '/stories/:id',
-      name: 'story-view',
-      component: () => import('../views/StoryView.vue'),
-    },
-    {
       path: '/stories/:id/edit',
       name: 'edit-story',
       component: () => import('../views/EditStoryView.vue'),
       meta: { requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/essays',
+      name: 'essays',
+      component: () => import('../views/categories/EssaysView.vue'),
+    },
+    {
+      path: '/articles',
+      name: 'articles',
+      component: () => import('../views/categories/ArticlesView.vue'),
+    },
+    {
+      path: '/short-stories',
+      name: 'short-stories',
+      component: () => import('../views/categories/ShortStoriesView.vue'),
+    },
+    {
+      path: '/poems',
+      name: 'poems',
+      component: () => import('../views/categories/PoemsView.vue'),
+    },
+    {
+      path: '/plays',
+      name: 'plays',
+      component: () => import('../views/categories/PlaysView.vue'),
     },
   ],
 })

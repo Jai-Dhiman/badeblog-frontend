@@ -50,9 +50,7 @@ const loading = ref(false)
 
 onMounted(async () => {
   try {
-    console.log('Fetching categories...')
     const data = await getCategories()
-    console.log('Received categories:', data)
     categories.value = Array.isArray(data) ? data : []
   } catch (error) {
     console.error('Failed to load categories:', error)

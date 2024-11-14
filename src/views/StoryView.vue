@@ -37,7 +37,7 @@
 
         <!-- Story Content -->
         <div class="prose prose-lg max-w-none">
-          <div v-html="story?.attributes.content || ''"></div>
+          <div v-html="story?.attributes.content || ''" class="ql-editor"></div>
         </div>
       </div>
 
@@ -188,3 +188,70 @@ const handleCommentSubmit = async () => {
   }
 }
 </script>
+
+<style>
+.prose .ql-align-center {
+  text-align: center;
+}
+
+.prose .ql-align-right {
+  text-align: right;
+}
+
+.prose .ql-align-justify {
+  text-align: justify;
+}
+
+.prose .ql-size-small {
+  font-size: 0.875em;
+}
+
+.prose .ql-size-large {
+  font-size: 1.25em;
+}
+
+.prose .ql-size-huge {
+  font-size: 1.5em;
+}
+
+.prose ul:not(.list-none) {
+  list-style-type: disc;
+  padding-left: 1.5em;
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5em;
+}
+
+.prose blockquote {
+  border-left: 4px solid #ccc;
+  margin: 1.5em 0;
+  padding-left: 1em;
+}
+
+.prose .ql-strike {
+  text-decoration: line-through;
+}
+
+.prose .ql-underline {
+  text-decoration: underline;
+}
+
+.prose .ql-code-block {
+  background-color: #f4f4f4;
+  padding: 1em;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.prose sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+.prose sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+</style>

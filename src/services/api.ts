@@ -61,6 +61,15 @@ export const getStory = async (id: number): Promise<Story> => {
   return response.data.data
 }
 
+export const getStoriesByCategory = async (categoryId: number) => {
+  try {
+    const response = await api.get(`/categories/${categoryId}/stories`)
+    return response.data.data || []
+  } catch (error) {
+    throw error
+  }
+}
+
 export const getStoryComments = async (storyId: number) => {
   const response = await api.get(`/stories/${storyId}/comments`, {
     headers: {
