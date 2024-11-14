@@ -6,35 +6,40 @@
       {{ error }}
     </div>
 
-    <div v-else class="space-y-6">
-      <!-- Story Header -->
-      <div class="border-b pb-4">
-        <h1 class="text-4xl font-bold mb-2">{{ story?.attributes.title }}</h1>
-        <div class="flex items-center text-gray-600 space-x-4">
-          <span>{{ formatDate(story?.attributes['created-at']) }}</span>
-          <span>•</span>
-          <span>{{ categoryNames[story?.id || ''] || 'Loading...' }}</span>
+    <div v-else class="space-y-8">
+      <!-- Main Story Card -->
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <!-- Story Header -->
+        <div class="border-b pb-6 mb-6">
+          <h1 class="text-4xl font-bold mb-3">{{ story?.attributes.title }}</h1>
+          <div class="flex items-center text-gray-600 space-x-4 mb-6">
+            <span>{{ formatDate(story?.attributes['created-at']) }}</span>
+            <span>•</span>
+            <span>{{ categoryNames[story?.id || ''] || 'Loading...' }}</span>
+          </div>
+
+          <!-- Admin Controls -->
+          <div v-if="isAdmin" class="flex space-x-4">
+            <button
+              @click="handleEdit"
+              class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
+            >
+              Edit Story
+            </button>
+            <button
+              @click="handleDelete"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
+            >
+              Delete Story
+            </button>
+          </div>
+        </div>
+
+        <!-- Story Content -->
+        <div class="prose prose-lg max-w-none">
+          <div v-html="story?.attributes.content || ''"></div>
         </div>
       </div>
-
-      <!-- Admin Controls -->
-      <div v-if="authStore.user?.role === 'admin'" class="flex space-x-4">
-        <button
-          @click="handleEdit"
-          class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
-        >
-          Edit Story
-        </button>
-        <button
-          @click="handleDelete"
-          class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
-        >
-          Delete Story
-        </button>
-      </div>
-
-      <!-- Story Content -->
-      <div class="prose prose-lg max-w-none" v-html="story?.attributes.content || ''"></div>
 
       <!-- Comments Section -->
       <div class="mt-12 pt-8 border-t">
@@ -70,11 +75,13 @@
         <!-- Comments List -->
         <div v-if="!comments?.length" class="text-gray-500">No comments yet.</div>
         <div v-else class="space-y-4">
-          <div v-for="comment in comments" :key="comment.id" class="bg-gray-50 p-4 rounded-lg">
-            <!-- Comment content -->
+          <div
+            v-for="(comment, index) in comments"
+            :key="comment.id"
+            class="bg-gray-50 p-4"
+            :class="{ 'border-b pb-4': index !== comments.length - 1 }"
+          >
             <div class="text-gray-800 mb-2">{{ comment.attributes.content }}</div>
-
-            <!-- User and time info -->
             <div class="flex items-center text-sm text-gray-600">
               <span class="font-medium">{{ comment.attributes['user-info'].name }}</span>
               <span class="mx-2">•</span>
@@ -88,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type { Story, Comment } from '@/types'
@@ -105,6 +112,8 @@ const error = ref('')
 const newComment = ref('')
 const commentLoading = ref(false)
 const categoryNames = ref<Record<string, string>>({})
+
+const isAdmin = computed(() => authStore.user?.role === 'admin')
 
 function formatDate(dateString: string | undefined) {
   if (!dateString) return ''
@@ -136,7 +145,6 @@ onMounted(async () => {
     ])
     story.value = storyData
     comments.value = commentsData.data || []
-    console.log('Comments Data', comments.value)
 
     if (story.value) {
       await fetchCategoryName(story.value)

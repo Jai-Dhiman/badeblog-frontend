@@ -30,6 +30,12 @@ const router = createRouter({
       name: 'story-view',
       component: () => import('../views/StoryView.vue'),
     },
+    {
+      path: '/stories/:id/edit',
+      name: 'edit-story',
+      component: () => import('../views/EditStoryView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
   ],
 })
 

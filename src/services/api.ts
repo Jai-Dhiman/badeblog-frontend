@@ -10,6 +10,9 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  if (!config.headers.Authorization) {
+    delete config.headers.Authorization
+  }
   return config
 })
 
@@ -48,12 +51,29 @@ export const getCategory = async (id: string) => {
 }
 
 export const getStory = async (id: number): Promise<Story> => {
-  const response = await api.get(`/stories/${id}`)
+  const response = await api.get(`/stories/${id}`, {
+    headers: {
+      Authorization: localStorage.getItem('token')
+        ? `Bearer ${localStorage.getItem('token')}`
+        : undefined,
+    },
+  })
   return response.data.data
 }
 
 export const getStoryComments = async (storyId: number) => {
-  const response = await api.get(`/stories/${storyId}/comments`)
+  const response = await api.get(`/stories/${storyId}/comments`, {
+    headers: {
+      Authorization: localStorage.getItem('token')
+        ? `Bearer ${localStorage.getItem('token')}`
+        : undefined,
+    },
+  })
+  return response.data
+}
+
+export const updateStory = async (id: number, storyData: CreateStoryData) => {
+  const response = await api.put(`/stories/${id}`, storyData)
   return response.data
 }
 

@@ -30,7 +30,9 @@
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
           <h2 class="text-2xl font-bold mb-2">
-            {{ story.attributes.title }}
+            <router-link :to="`/stories/${story.id}`" class="hover:text-accent">
+              {{ story.attributes.title }}
+            </router-link>
           </h2>
 
           <div class="flex items-center text-gray-600 text-sm mb-4">
