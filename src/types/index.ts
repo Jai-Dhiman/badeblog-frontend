@@ -1,30 +1,42 @@
-// export interface StoryAttributes {
-//   title: string
-//   content: string
-//   status: 'draft' | 'published'
-//   category_id: number
-//   category?: Category
-//   user_id: number
-//   user?: User
-//   created_at: string
-//   updated_at: string
-// }
+export interface StoryAttributes {
+  title: string
+  content: string
+  status: string
+  'category-id': number
+  'user-id': number
+  'created-at': string
+  'updated-at': string
+}
 
 export interface Story {
-  id: number
+  id: string
   type: string
-  attributes: {
-    id: number
-    title: string
-    content: string
-    status: 'draft' | 'published'
-    category_id: number
-    category?: Category
-    user_id: number
-    user?: User
-    created_at: string
-    updated_at: string
+  attributes: StoryAttributes
+  relationships: {
+    category: {
+      data: {
+        id: string
+        type: string
+      }
+    }
+    user: {
+      data: {
+        id: number
+        name: string
+        email: string
+        role: string
+        created_at: string
+        updated_at: string
+      }
+    }
   }
+}
+
+export interface CreateStoryData {
+  title: string
+  content: string
+  category_id: number
+  status: 'draft' | 'published'
 }
 
 export interface User {
@@ -36,16 +48,22 @@ export interface User {
 
 export interface Category {
   id: number
-  name: string
+  type: string
+  attributes: {
+    name: string
+  }
 }
 
 export interface Comment {
-  id: number
-  content: string
-  user: {
-    id: number
-    name: string
+  id: string
+  type: string
+  attributes: {
+    content: string
+    'created-at': string
+    'updated-at': string
+    'user-info': {
+      id: number
+      name: string
+    }
   }
-  created_at: string
-  updated_at: string
 }

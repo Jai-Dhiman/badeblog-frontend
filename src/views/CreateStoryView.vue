@@ -13,7 +13,7 @@
         <select v-model="categoryId" class="w-full p-3 border rounded-lg text-lg" required>
           <option value="">Select a category</option>
           <option v-for="category in categories" :key="category.id" :value="category.id">
-            {{ category.name }}
+            {{ category.attributes.name }}
           </option>
         </select>
       </div>
@@ -39,7 +39,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { createStory, getCategories } from '@/services/api'
 import RichTextEditor from '@/components/RichTextEditor.vue'
-import type { Category } from '@/types'
+import type { CreateStoryData, Category } from '@/types'
 
 const router = useRouter()
 const title = ref('')
@@ -50,7 +50,10 @@ const loading = ref(false)
 
 onMounted(async () => {
   try {
-    categories.value = await getCategories()
+    console.log('Fetching categories...')
+    const data = await getCategories()
+    console.log('Received categories:', data)
+    categories.value = Array.isArray(data) ? data : []
   } catch (error) {
     console.error('Failed to load categories:', error)
   }
@@ -61,12 +64,13 @@ async function handleSubmit() {
 
   loading.value = true
   try {
-    await createStory({
+    const storyData: CreateStoryData = {
       title: title.value,
       content: content.value,
       category_id: categoryId.value,
       status: 'published',
-    })
+    }
+    await createStory(storyData)
     router.push('/stories')
   } catch (error) {
     console.error('Failed to create story:', error)

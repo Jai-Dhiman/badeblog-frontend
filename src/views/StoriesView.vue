@@ -16,37 +16,49 @@
       {{ error }}
     </div>
 
-    <div v-else class="space-y-4">
-      <div v-for="story in stories" :key="story.id" class="border p-4 rounded shadow">
-        <h2 class="text-xl font-bold">
+    <div v-else class="space-y-8">
+      <article
+        v-for="story in stories"
+        :key="story.id"
+        class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+      >
+        <h2 class="text-2xl font-bold mb-2">
           <router-link :to="`/stories/${story.id}`" class="hover:text-accent">
             {{ story.attributes.title }}
           </router-link>
         </h2>
-        <p class="text-gray-600 mt-2">
-          {{ formatDate(story.attributes.created_at) }}
-        </p>
-      </div>
-    </div>
 
-    <!-- Debug output -->
-    <div v-if="stories.length > 0" class="mt-8 p-4 bg-gray-100">
-      <p class="font-bold mb-2">Debug - First Story Data:</p>
-      <pre>{{ JSON.stringify(stories[0], null, 2) }}</pre>
+        <div class="flex items-center text-gray-600 text-sm mb-4">
+          <span>{{ formatDate(story.attributes['created-at']) }}</span>
+          <span class="mx-2">•</span>
+          <span>{{ categoryNames[story.id] || 'Loading...' }}</span>
+        </div>
+
+        <div class="prose prose-sm line-clamp-3 mb-4" v-html="story.attributes.content"></div>
+
+        <router-link
+          :to="`/stories/${story.id}`"
+          class="text-accent hover:text-secondary font-medium"
+        >
+          Read more →
+        </router-link>
+      </article>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getStories } from '@/services/api'
+import { getStories, getCategory } from '@/services/api'
 import type { Story } from '@/types'
 
 const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
+const categoryNames = ref<Record<string, string>>({})
 
-function formatDate(dateString: string) {
+function formatDate(dateString: string | undefined) {
+  if (!dateString) return ''
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -54,14 +66,24 @@ function formatDate(dateString: string) {
   })
 }
 
+async function fetchCategoryName(story: Story) {
+  try {
+    const categoryId = story.relationships.category.data.id
+    const categoryResponse = await getCategory(categoryId)
+    categoryNames.value[story.id] = categoryResponse.data.attributes.name
+  } catch (error) {
+    console.error('Error fetching category:', error)
+    categoryNames.value[story.id] = 'Uncategorized'
+  }
+}
+
 onMounted(async () => {
   try {
     loading.value = true
-    console.log('Fetching stories...')
     const data = await getStories()
-    console.log('Received stories:', data)
     stories.value = Array.isArray(data) ? data : []
-    console.log('Processed stories:', stories.value)
+
+    await Promise.all(stories.value.map(fetchCategoryName))
   } catch (err) {
     console.error('Failed to load stories:', err)
     error.value = err instanceof Error ? err.message : 'Failed to load stories'

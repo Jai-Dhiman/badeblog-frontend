@@ -30,19 +30,16 @@
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
           <h2 class="text-2xl font-bold mb-2">
-            {{ story.attributes?.title || 'Untitled' }}
+            {{ story.attributes.title }}
           </h2>
 
           <div class="flex items-center text-gray-600 text-sm mb-4">
-            <span>{{ formatDate(story.attributes?.created_at) }}</span>
+            <span>{{ formatDate(story.attributes['created-at']) }}</span>
             <span class="mx-2">•</span>
-            <span>{{ story.attributes?.category?.name || 'Uncategorized' }}</span>
+            <span>{{ categoryNames[story.id] || 'Loading...' }}</span>
           </div>
 
-          <div
-            class="prose prose-sm line-clamp-3 mb-4"
-            v-html="story.attributes?.content || ''"
-          ></div>
+          <div class="prose prose-sm line-clamp-3 mb-4" v-html="story.attributes.content"></div>
 
           <router-link
             :to="`/stories/${story.id}`"
@@ -58,16 +55,17 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getStories } from '@/services/api'
-import type { Story } from '@/types'
 import { useAuthStore } from '@/stores/auth'
+import { getStories, getCategory } from '@/services/api'
+import type { Story } from '@/types'
 
 const authStore = useAuthStore()
 const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
+const categoryNames = ref<Record<string, string>>({})
 
-function formatDate(dateString?: string) {
+function formatDate(dateString: string | undefined) {
   if (!dateString) return ''
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -76,16 +74,26 @@ function formatDate(dateString?: string) {
   })
 }
 
+async function fetchCategoryName(story: Story) {
+  try {
+    const categoryId = story.relationships.category.data.id
+    const categoryResponse = await getCategory(categoryId)
+    categoryNames.value[story.id] = categoryResponse.data.attributes.name
+  } catch (error) {
+    console.error('Error fetching category:', error)
+    categoryNames.value[story.id] = 'Uncategorized'
+  }
+}
+
 onMounted(async () => {
   try {
     loading.value = true
-    console.log('Fetching stories...')
     const data = await getStories()
-    console.log('Received stories:', data)
     stories.value = Array.isArray(data) ? data : []
-    console.log('Processed stories:', stories.value)
+
+    await Promise.all(stories.value.map(fetchCategoryName))
   } catch (err) {
-    console.error('Error loading stories:', err)
+    console.error('Failed to load stories:', err)
     error.value = err instanceof Error ? err.message : 'Failed to load stories'
   } finally {
     loading.value = false

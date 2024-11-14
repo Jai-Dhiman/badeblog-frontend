@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Story, Comment } from '@/types'
+import type { Story, CreateStoryData } from '@/types'
 
 const api = axios.create({
   baseURL: 'http://localhost:3000',
@@ -21,7 +21,6 @@ export const login = async (email: string, password: string) => {
 export const getStories = async () => {
   try {
     const response = await api.get('/stories')
-    console.log('Raw API response:', response)
     return response.data.data || []
   } catch (error) {
     console.error('API Error:', error)
@@ -29,22 +28,31 @@ export const getStories = async () => {
   }
 }
 
-export const createStory = async (storyData: Partial<Story>) => {
+export const createStory = async (storyData: CreateStoryData) => {
   const response = await api.post('/stories', storyData)
   return response.data
 }
 
 export const getCategories = async () => {
-  const response = await api.get('/categories')
+  try {
+    const response = await api.get('/categories')
+    return response.data.data || []
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getCategory = async (id: string) => {
+  const response = await api.get(`/categories/${id}`)
   return response.data
 }
 
 export const getStory = async (id: number): Promise<Story> => {
   const response = await api.get(`/stories/${id}`)
-  return response.data.data || response.data
+  return response.data.data
 }
 
-export const getStoryComments = async (storyId: number): Promise<Comment[]> => {
+export const getStoryComments = async (storyId: number) => {
   const response = await api.get(`/stories/${storyId}/comments`)
   return response.data
 }
@@ -56,5 +64,5 @@ export const deleteStory = async (id: number) => {
 
 export const createComment = async (storyId: number, data: { content: string }) => {
   const response = await api.post(`/stories/${storyId}/comments`, data)
-  return response.data
+  return response.data.data
 }
