@@ -2,17 +2,33 @@
   <div class="min-h-screen bg-gray-50">
     <nav class="bg-primary shadow-md">
       <div class="container mx-auto px-4 py-3">
-        <div class="flex justify-between items-center">
+        <!-- Top navigation with auth -->
+        <div class="flex justify-between items-center mb-3">
           <router-link to="/" class="text-white text-xl font-bold"> Home </router-link>
-
           <div v-if="authStore.user">
-            <router-link to="/stories" class="text-white hover:text-gray-200 mr-4">
-              Stories
-            </router-link>
             <button @click="authStore.logout" class="text-white hover:text-gray-200">Logout</button>
           </div>
           <router-link v-else to="/login" class="text-white hover:text-gray-200">
             Login
+          </router-link>
+        </div>
+
+        <!-- Category navigation -->
+        <div class="flex space-x-6 overflow-x-auto">
+          <router-link to="/essays" class="text-white hover:text-gray-200 whitespace-nowrap">
+            Essays
+          </router-link>
+          <router-link to="/articles" class="text-white hover:text-gray-200 whitespace-nowrap">
+            Articles
+          </router-link>
+          <router-link to="/short-stories" class="text-white hover:text-gray-200 whitespace-nowrap">
+            Short Stories
+          </router-link>
+          <router-link to="/poems" class="text-white hover:text-gray-200 whitespace-nowrap">
+            Poems
+          </router-link>
+          <router-link to="/plays" class="text-white hover:text-gray-200 whitespace-nowrap">
+            Plays
           </router-link>
         </div>
       </div>

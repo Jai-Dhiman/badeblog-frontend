@@ -34,27 +34,27 @@ const router = createRouter({
     {
       path: '/essays',
       name: 'essays',
-      component: () => import('../views/categories/EssaysView.vue'),
+      component: () => import('../views/EssaysView.vue'),
     },
     {
       path: '/articles',
       name: 'articles',
-      component: () => import('../views/categories/ArticlesView.vue'),
+      component: () => import('../views/ArticleView.vue'),
     },
     {
       path: '/short-stories',
       name: 'short-stories',
-      component: () => import('../views/categories/ShortStoriesView.vue'),
+      component: () => import('../views/ShortStoryView.vue'),
     },
     {
       path: '/poems',
       name: 'poems',
-      component: () => import('../views/categories/PoemsView.vue'),
+      component: () => import('../views/PoemView.vue'),
     },
     {
       path: '/plays',
       name: 'plays',
-      component: () => import('../views/categories/PlaysView.vue'),
+      component: () => import('../views/PlayView.vue'),
     },
   ],
 })
