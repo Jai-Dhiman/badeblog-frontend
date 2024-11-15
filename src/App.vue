@@ -59,7 +59,10 @@
               </router-link>
             </div>
             <!-- Right side About Me -->
-            <router-link to="/about" class="text-white hover:text-gray-200 whitespace-nowrap">
+            <router-link
+              to="/about"
+              class="text-white hover:text-gray-200 whitespace-nowrap text-xl font-bold"
+            >
               About Me
             </router-link>
           </div>
