@@ -4,7 +4,7 @@ FROM node:20-slim as build-stage
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package*.json .npmrc ./
 
 # Install dependencies
 RUN npm ci
@@ -12,7 +12,7 @@ RUN npm ci
 # Copy project files
 COPY . .
 
-# Set production environment and build
+# Build the app
 ENV NODE_ENV=production
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
