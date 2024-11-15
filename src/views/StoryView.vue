@@ -81,7 +81,29 @@
             class="bg-gray-50 p-4"
             :class="{ 'border-b pb-4': index !== comments.length - 1 }"
           >
-            <div class="text-gray-800 mb-2">{{ comment.attributes.content }}</div>
+            <div class="flex justify-between">
+              <div class="text-gray-800 mb-2">{{ comment.attributes.content }}</div>
+              <!-- Add delete button if user is comment owner or admin -->
+              <button
+                v-if="canDeleteComment(comment)"
+                @click="handleCommentDelete(comment.id)"
+                class="text-red-600 hover:text-red-800"
+              >
+                <span class="sr-only">Delete comment</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
             <div class="flex items-center text-sm text-gray-600">
               <span class="font-medium">{{ comment.attributes['user-info'].name }}</span>
               <span class="mx-2">•</span>
@@ -99,12 +121,18 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import type { Story, Comment } from '@/types'
-import { getStory, getStoryComments, deleteStory, createComment, getCategory } from '@/services/api'
+import {
+  getStory,
+  getStoryComments,
+  deleteStory,
+  createComment,
+  getCategory,
+  deleteComment,
+} from '@/services/api'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-
 const story = ref<Story | null>(null)
 const comments = ref<Comment[]>([])
 const loading = ref(true)
@@ -185,6 +213,25 @@ const handleCommentSubmit = async () => {
     console.error('Failed to post comment:', err)
   } finally {
     commentLoading.value = false
+  }
+}
+
+const canDeleteComment = (comment: Comment) => {
+  return (
+    authStore.user?.id === comment.attributes['user-info'].id || authStore.user?.role === 'admin'
+  )
+}
+
+const handleCommentDelete = async (commentId: string) => {
+  if (!story.value?.id || !confirm('Are you sure you want to delete this comment?')) return
+
+  try {
+    await deleteComment(Number(story.value.id), commentId)
+    // Refresh comments after deletion
+    const commentsData = await getStoryComments(Number(story.value.id))
+    comments.value = commentsData.data || []
+  } catch (err) {
+    console.error('Failed to delete comment:', err)
   }
 }
 </script>

@@ -118,3 +118,8 @@ export const createComment = async (storyId: number, data: { content: string }) 
   const response = await api.post(`/stories/${storyId}/comments`, data)
   return response.data.data
 }
+
+export const deleteComment = async (storyId: number, commentId: string) => {
+  const response = await api.delete(`/stories/${storyId}/comments/${commentId}`)
+  return response.data
+}
