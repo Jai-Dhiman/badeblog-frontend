@@ -15,6 +15,10 @@
       />
     </div>
     <button type="submit" class="btn btn-primary w-full">Login</button>
+    <div class="mt-4 text-center">
+      Don't have an account?
+      <router-link to="/signup" class="text-accent hover:text-secondary">Sign Up</router-link>
+    </div>
   </form>
 </template>
 

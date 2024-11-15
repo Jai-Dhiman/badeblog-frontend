@@ -6,7 +6,7 @@
     </header>
 
     <div class="mb-8">
-      <div v-if="authStore.user?.role === 'admin'" class="text-right mb-6">
+      <div v-if="authStore.user?.role === 'admin'" class="text-center mb-6">
         <router-link
           to="/stories/new"
           class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90"

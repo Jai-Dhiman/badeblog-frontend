@@ -20,9 +20,12 @@
                 </button>
               </div>
             </div>
-            <router-link v-else to="/login" class="text-white hover:text-gray-200">
-              Login
-            </router-link>
+            <div v-else class="flex items-center space-x-4">
+              <router-link to="/signup" class="text-white hover:text-gray-200">
+                Sign Up
+              </router-link>
+              <router-link to="/login" class="text-white hover:text-gray-200"> Login </router-link>
+            </div>
           </div>
         </div>
         <!-- Category navigation -->

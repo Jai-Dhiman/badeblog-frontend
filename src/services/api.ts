@@ -21,6 +21,17 @@ export const login = async (email: string, password: string) => {
   return response.data
 }
 
+export const signup = async (userData: {
+  name: string
+  email: string
+  password: string
+  password_confirmation: string
+  role: string
+}) => {
+  const response = await api.post('/users', userData)
+  return response.data
+}
+
 export const getStories = async () => {
   try {
     const response = await api.get('/stories')
