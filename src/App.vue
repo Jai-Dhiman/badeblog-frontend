@@ -5,7 +5,9 @@
         <!-- Top navigation with auth -->
         <div class="flex flex-col">
           <div class="flex justify-between items-center mb-3">
-            <router-link to="/" class="text-white text-xl font-bold"> Home </router-link>
+            <router-link to="/" class="text-white hover:text-gray-200 text-xl font-bold">
+              Home
+            </router-link>
             <div class="flex items-center space-x-4">
               <div v-if="authStore.user">
                 <div class="flex items-center space-x-4">
@@ -31,9 +33,8 @@
               </div>
             </div>
           </div>
-
           <!-- Second row with About Me and Categories -->
-          <div class="flex justify-between overflow-x-auto">
+          <div class="flex justify-between items-center">
             <!-- Left side categories -->
             <div class="flex space-x-6">
               <router-link to="/essays" class="text-white hover:text-gray-200 whitespace-nowrap">
@@ -58,13 +59,18 @@
                 Other
               </router-link>
             </div>
-            <!-- Right side About Me -->
-            <router-link
-              to="/about"
-              class="text-white hover:text-gray-200 whitespace-nowrap text-xl font-bold"
-            >
-              About Me
-            </router-link>
+            <!-- Right side links -->
+            <div class="flex items-center space-x-4">
+              <router-link to="/about" class="text-white hover:text-gray-200 whitespace-nowrap">
+                About Me
+              </router-link>
+              <router-link
+                to="/acknowledge"
+                class="text-white hover:text-gray-200 whitespace-nowrap"
+              >
+                Acknowledgements
+              </router-link>
+            </div>
           </div>
         </div>
       </div>

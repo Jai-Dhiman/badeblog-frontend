@@ -12,7 +12,11 @@ RUN npm ci
 # Copy project files
 COPY . .
 
-# Build the app
+# Set production environment and build
+ENV NODE_ENV=production
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN npm run build
 
 # Production stage
@@ -21,10 +25,16 @@ FROM nginx:stable-alpine as production-stage
 # Copy built assets from build stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-# Add nginx configuration (create this file - I'll show you the contents below)
+# Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port
+# Create nginx pid directory
+RUN mkdir -p /run/nginx
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
