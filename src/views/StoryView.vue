@@ -26,18 +26,12 @@
             >
               Edit Story
             </button>
-            <button
-              @click="handleDelete"
-              class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
-            >
-              Delete Story
-            </button>
           </div>
         </div>
 
         <!-- Story Content -->
         <div class="prose prose-lg max-w-none">
-          <div v-html="story?.attributes.content || ''" class="ql-editor"></div>
+          <div v-html="story?.attributes.content || ''" class="ql-editor action-text-content"></div>
         </div>
       </div>
 
@@ -124,7 +118,6 @@ import type { Story, Comment } from '@/types'
 import {
   getStory,
   getStoryComments,
-  deleteStory,
   createComment,
   getCategory,
   deleteComment,
@@ -187,17 +180,6 @@ onMounted(async () => {
 
 const handleEdit = () => {
   router.push(`/stories/${story.value?.id}/edit`)
-}
-
-const handleDelete = async () => {
-  if (!story.value?.id || !confirm('Are you sure you want to delete this story?')) return
-
-  try {
-    await deleteStory(Number(story.value.id))
-    router.push('/')
-  } catch (err) {
-    console.error('Failed to delete story:', err)
-  }
 }
 
 const handleCommentSubmit = async () => {
@@ -300,5 +282,18 @@ const handleCommentDelete = async (commentId: string) => {
 .prose sub {
   vertical-align: sub;
   font-size: smaller;
+}
+
+.action-text-content > .trix-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.action-text-content > .trix-content > :first-child {
+  margin-top: 0 !important;
+}
+
+.action-text-content > .trix-content > :last-child {
+  margin-bottom: 0 !important;
 }
 </style>
