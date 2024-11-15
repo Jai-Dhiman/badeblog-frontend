@@ -56,6 +56,12 @@ const router = createRouter({
       name: 'plays',
       component: () => import('../views/PlayView.vue'),
     },
+    {
+      path: '/drafts',
+      name: 'drafts',
+      component: () => import('../views/DraftsView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
   ],
 })
 

@@ -31,7 +31,7 @@ const router = useRouter()
 async function handleSubmit() {
   const success = await authStore.loginUser(email.value, password.value)
   if (success) {
-    router.push('/stories')
+    router.push('/')
   }
 }
 </script>

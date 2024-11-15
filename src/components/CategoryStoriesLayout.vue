@@ -10,7 +10,7 @@
           to="/stories/new"
           class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
         >
-          Write New {{ title }}
+          New Work
         </router-link>
       </div>
 

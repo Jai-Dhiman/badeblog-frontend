@@ -1,13 +1,11 @@
 <template>
   <div class="max-w-4xl mx-auto p-4">
     <h1 class="text-2xl font-bold mb-6">Write New Story</h1>
-
-    <form @submit.prevent="handleSubmit" class="space-y-6">
+    <div class="space-y-6">
       <div>
         <label class="block mb-2 text-lg">Title</label>
         <input v-model="title" type="text" class="w-full p-3 border rounded-lg text-lg" required />
       </div>
-
       <div>
         <label class="block mb-2 text-lg">Category</label>
         <select v-model="categoryId" class="w-full p-3 border rounded-lg text-lg" required>
@@ -17,20 +15,30 @@
           </option>
         </select>
       </div>
-
       <div>
         <label class="block mb-2 text-lg">Content</label>
         <RichTextEditor v-model="content" class="mb-6" />
       </div>
+      <div class="flex gap-4">
+        <button
+          type="button"
+          @click="handleSubmit('draft')"
+          class="bg-gray-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors"
+          :disabled="loading"
+        >
+          {{ loading ? 'Saving...' : 'Save as Draft' }}
+        </button>
 
-      <button
-        type="submit"
-        class="bg-primary text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors"
-        :disabled="loading"
-      >
-        {{ loading ? 'Saving...' : 'Save Story' }}
-      </button>
-    </form>
+        <button
+          type="button"
+          @click="handleSubmit('published')"
+          class="bg-primary text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors"
+          :disabled="loading"
+        >
+          {{ loading ? 'Publishing...' : 'Publish Story' }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -57,19 +65,18 @@ onMounted(async () => {
   }
 })
 
-async function handleSubmit() {
+async function handleSubmit(status: 'draft' | 'published') {
   if (!categoryId.value) return
-
   loading.value = true
   try {
     const storyData: CreateStoryData = {
       title: title.value,
       content: content.value,
       category_id: categoryId.value,
-      status: 'published',
+      status: status,
     }
     await createStory(storyData)
-    router.push('/stories')
+    router.push(status === 'draft' ? '/drafts' : '/stories')
   } catch (error) {
     console.error('Failed to create story:', error)
   } finally {

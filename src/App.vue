@@ -5,14 +5,26 @@
         <!-- Top navigation with auth -->
         <div class="flex justify-between items-center mb-3">
           <router-link to="/" class="text-white text-xl font-bold"> Home </router-link>
-          <div v-if="authStore.user">
-            <button @click="authStore.logout" class="text-white hover:text-gray-200">Logout</button>
+          <div class="flex items-center space-x-4">
+            <div v-if="authStore.user">
+              <div class="flex items-center space-x-4">
+                <router-link
+                  v-if="authStore.user.role === 'admin'"
+                  to="/drafts"
+                  class="text-white hover:text-gray-200"
+                >
+                  Drafts
+                </router-link>
+                <button @click="authStore.logout" class="text-white hover:text-gray-200">
+                  Logout
+                </button>
+              </div>
+            </div>
+            <router-link v-else to="/login" class="text-white hover:text-gray-200">
+              Login
+            </router-link>
           </div>
-          <router-link v-else to="/login" class="text-white hover:text-gray-200">
-            Login
-          </router-link>
         </div>
-
         <!-- Category navigation -->
         <div class="flex space-x-6 overflow-x-auto">
           <router-link to="/essays" class="text-white hover:text-gray-200 whitespace-nowrap">
@@ -33,7 +45,6 @@
         </div>
       </div>
     </nav>
-
     <main class="container mx-auto px-4 py-8">
       <router-view />
     </main>

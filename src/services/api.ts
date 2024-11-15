@@ -61,9 +61,21 @@ export const getStory = async (id: number): Promise<Story> => {
   return response.data.data
 }
 
+export const getDrafts = async () => {
+  try {
+    const response = await api.get('/stories/drafts')
+    return response.data.data || []
+  } catch (error) {
+    console.error('API Error:', error)
+    throw error
+  }
+}
+
 export const getStoriesByCategory = async (categoryId: number) => {
   try {
-    const response = await api.get(`/categories/${categoryId}/stories`)
+    const response = await api.get(`/categories/${categoryId}/stories`, {
+      params: { status: 'published' },
+    })
     return response.data.data || []
   } catch (error) {
     throw error
