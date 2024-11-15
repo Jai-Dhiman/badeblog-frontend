@@ -1,8 +1,10 @@
 <template>
   <div class="max-w-4xl mx-auto px-4">
     <header class="text-center my-8">
-      <h1 class="text-3xl font-bold mb-4">Welcome to BadeBlog</h1>
-      <p class="text-xl text-gray-600">A place to share and preserve life stories and memories.</p>
+      <h1 class="text-3xl font-bold mb-4">My Ideas My Words</h1>
+      <p class="text-xl text-gray-600">
+        A place to share and preserve stories and other literary work
+      </p>
     </header>
 
     <div class="mb-8">
@@ -30,7 +32,7 @@
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
           <h2 class="text-2xl font-bold mb-2">
-            <router-link :to="`/stories/${story.id}`" class="hover:text-accent">
+            <router-link :to="`/stories/${story.id}`" class="text-black hover:text-accent">
               {{ story.attributes.title }}
             </router-link>
           </h2>

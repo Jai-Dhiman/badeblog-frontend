@@ -45,6 +45,9 @@
           <router-link to="/plays" class="text-white hover:text-gray-200 whitespace-nowrap">
             Plays
           </router-link>
+          <router-link to="/others" class="text-white hover:text-gray-200 whitespace-nowrap">
+            Other
+          </router-link>
         </div>
       </div>
     </nav>

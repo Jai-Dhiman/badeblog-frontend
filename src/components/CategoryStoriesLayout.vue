@@ -26,7 +26,7 @@
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
           <h2 class="text-2xl font-bold mb-2">
-            <router-link :to="`/stories/${story.id}`" class="hover:text-accent">
+            <router-link :to="`/stories/${story.id}`" class="text-black hover:text-accent">
               {{ story.attributes.title }}
             </router-link>
           </h2>

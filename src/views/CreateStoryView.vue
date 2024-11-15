@@ -23,7 +23,7 @@
         <button
           type="button"
           @click="handleSubmit('draft')"
-          class="bg-gray-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors"
+          class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-90 transition-colors"
           :disabled="loading"
         >
           {{ loading ? 'Saving...' : 'Save as Draft' }}
