@@ -50,6 +50,7 @@
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { getStoriesByCategory } from '@/services/api'
+import axios from 'axios'
 import type { Story } from '@/types'
 
 const props = defineProps<{
@@ -74,11 +75,18 @@ function formatDate(dateString: string | undefined) {
 onMounted(async () => {
   try {
     loading.value = true
+    console.log('Fetching stories for category:', props.categoryId)
     const data = await getStoriesByCategory(props.categoryId)
+    console.log('Received data:', data)
     stories.value = Array.isArray(data) ? data : []
   } catch (err) {
     console.error('Failed to load stories:', err)
-    error.value = err instanceof Error ? err.message : 'Failed to load stories'
+    if (axios.isAxiosError(err)) {
+      error.value = `Error: ${err.response?.status} - ${err.response?.statusText}`
+      console.error('Response data:', err.response?.data)
+    } else {
+      error.value = err instanceof Error ? err.message : 'Failed to load stories'
+    }
   } finally {
     loading.value = false
   }
