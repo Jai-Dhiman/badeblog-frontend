@@ -63,7 +63,7 @@ export const getCategory = async (id: string) => {
   return response.data
 }
 
-export const getStory = async (id: number): Promise<Story> => {
+export const getStory = async (id: string): Promise<Story> => {
   const response = await api.get(`/stories/${id}`, {
     headers: {
       Authorization: localStorage.getItem('token')
@@ -84,7 +84,7 @@ export const getDrafts = async () => {
   }
 }
 
-export const getStoriesByCategory = async (categoryId: number) => {
+export const getStoriesByCategory = async (categoryId: string | number) => {
   try {
     const url = `/categories/${categoryId}/stories`
     console.log('Requesting URL:', api.defaults.baseURL + url)
@@ -103,7 +103,7 @@ export const getStoriesByCategory = async (categoryId: number) => {
   }
 }
 
-export const getStoryComments = async (storyId: number) => {
+export const getStoryComments = async (storyId: string) => {
   const response = await api.get(`/stories/${storyId}/comments`, {
     headers: {
       Authorization: localStorage.getItem('token')
@@ -114,22 +114,22 @@ export const getStoryComments = async (storyId: number) => {
   return response.data
 }
 
-export const updateStory = async (id: number, storyData: CreateStoryData) => {
+export const updateStory = async (id: string, storyData: CreateStoryData) => {
   const response = await api.put(`/stories/${id}`, storyData)
   return response.data
 }
 
-export const deleteStory = async (id: number) => {
+export const deleteStory = async (id: string) => {
   const response = await api.delete(`/stories/${id}`)
   return response.data
 }
 
-export const createComment = async (storyId: number, data: { content: string }) => {
+export const createComment = async (storyId: string, data: { content: string }) => {
   const response = await api.post(`/stories/${storyId}/comments`, data)
   return response.data.data
 }
 
-export const deleteComment = async (storyId: number, commentId: string) => {
+export const deleteComment = async (storyId: string, commentId: string) => {
   const response = await api.delete(`/stories/${storyId}/comments/${commentId}`)
   return response.data
 }

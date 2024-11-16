@@ -9,13 +9,13 @@ import CategoryStoriesLayout from '@/components/CategoryStoriesLayout.vue'
 import { getCategories } from '@/services/api'
 import type { Category } from '@/types'
 
-const categoryId = ref<number | null>(null)
+const categoryId = ref<string | number | null>(null)
 
 onMounted(async () => {
   try {
     const categories = await getCategories()
     const essayCategory = categories.find(
-      (c: Category) => c.attributes.name.toLowerCase() === 'plays',
+      (c: Category) => c.attributes.name.toLowerCase() === 'play',
     )
     if (essayCategory) {
       categoryId.value = essayCategory.id

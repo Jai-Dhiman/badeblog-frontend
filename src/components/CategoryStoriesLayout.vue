@@ -54,7 +54,7 @@ import axios from 'axios'
 import type { Story } from '@/types'
 
 const props = defineProps<{
-  categoryId: number
+  categoryId: string | number
   title: string
 }>()
 

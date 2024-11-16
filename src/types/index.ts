@@ -2,8 +2,8 @@ export interface StoryAttributes {
   title: string
   content: string
   status: string
-  'category-id': number
-  'user-id': number
+  'category-id': string
+  'user-id': string
   'created-at': string
   'updated-at': string
 }
@@ -21,7 +21,7 @@ export interface Story {
     }
     user: {
       data: {
-        id: number
+        id: string
         name: string
         email: string
         role: string
@@ -35,19 +35,19 @@ export interface Story {
 export interface CreateStoryData {
   title: string
   content: string
-  category_id: number
+  category_id: string
   status: 'draft' | 'published'
 }
 
 export interface User {
-  id: number
+  id: string
   email: string
   name: string
   role: 'admin' | 'user'
 }
 
 export interface Category {
-  id: number
+  id: string
   type: string
   attributes: {
     name: string
@@ -62,7 +62,7 @@ export interface Comment {
     'created-at': string
     'updated-at': string
     'user-info': {
-      id: number
+      id: string
       name: string
     }
   }

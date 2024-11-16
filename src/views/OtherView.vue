@@ -9,7 +9,7 @@ import CategoryStoriesLayout from '@/components/CategoryStoriesLayout.vue'
 import { getCategories } from '@/services/api'
 import type { Category } from '@/types'
 
-const categoryId = ref<number | null>(null)
+const categoryId = ref<string | number | null>(null)
 
 onMounted(async () => {
   try {

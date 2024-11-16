@@ -161,8 +161,8 @@ onMounted(async () => {
   try {
     loading.value = true
     const [storyData, commentsData] = await Promise.all([
-      getStory(Number(storyId)),
-      getStoryComments(Number(storyId)),
+      getStory(storyId),
+      getStoryComments(storyId),
     ])
     story.value = storyData
     comments.value = commentsData.data || []
@@ -187,9 +187,9 @@ const handleCommentSubmit = async () => {
 
   commentLoading.value = true
   try {
-    await createComment(Number(story.value.id), { content: newComment.value })
+    await createComment(story.value.id, { content: newComment.value })
     newComment.value = ''
-    const commentsData = await getStoryComments(Number(story.value.id))
+    const commentsData = await getStoryComments(story.value.id)
     comments.value = commentsData.data || []
   } catch (err) {
     console.error('Failed to post comment:', err)
@@ -208,9 +208,8 @@ const handleCommentDelete = async (commentId: string) => {
   if (!story.value?.id || !confirm('Are you sure you want to delete this comment?')) return
 
   try {
-    await deleteComment(Number(story.value.id), commentId)
-    // Refresh comments after deletion
-    const commentsData = await getStoryComments(Number(story.value.id))
+    await deleteComment(story.value.id, commentId)
+    const commentsData = await getStoryComments(story.value.id)
     comments.value = commentsData.data || []
   } catch (err) {
     console.error('Failed to delete comment:', err)
