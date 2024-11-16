@@ -20,7 +20,8 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = data.jwt
       localStorage.setItem('token', data.jwt)
       return true
-    } catch {
+    } catch (error) {
+      console.error('Login error:', error)
       return false
     }
   }
@@ -43,7 +44,8 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = data.token
       localStorage.setItem('token', data.token)
       return true
-    } catch {
+    } catch (error) {
+      console.error('Signup error:', error)
       return false
     }
   }

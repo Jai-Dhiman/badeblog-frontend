@@ -1,5 +1,3 @@
-console.log('API Base URL:', import.meta.env.VITE_API_URL)
-
 import axios from 'axios'
 import type { Story, CreateStoryData } from '@/types'
 
@@ -87,11 +85,9 @@ export const getDrafts = async () => {
 export const getStoriesByCategory = async (categoryId: string | number) => {
   try {
     const url = `/categories/${categoryId}/stories`
-    console.log('Requesting URL:', api.defaults.baseURL + url)
     const response = await api.get(url, {
       params: { status: 'published' },
     })
-    console.log('Response:', response)
     return response.data.data || []
   } catch (error) {
     console.error('Full error details:', {

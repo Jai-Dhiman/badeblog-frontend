@@ -67,3 +67,9 @@ export interface Comment {
     }
   }
 }
+
+export interface ApiError {
+  message?: string
+  errors?: string[]
+  error?: string
+}

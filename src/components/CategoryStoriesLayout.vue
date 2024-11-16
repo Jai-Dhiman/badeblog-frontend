@@ -75,9 +75,7 @@ function formatDate(dateString: string | undefined) {
 onMounted(async () => {
   try {
     loading.value = true
-    console.log('Fetching stories for category:', props.categoryId)
     const data = await getStoriesByCategory(props.categoryId)
-    console.log('Received data:', data)
     stories.value = Array.isArray(data) ? data : []
   } catch (err) {
     console.error('Failed to load stories:', err)
