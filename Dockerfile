@@ -25,11 +25,18 @@ FROM nginx:stable-alpine as production-stage
 # Copy built assets from build stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx template
+COPY nginx.template.conf /etc/nginx/conf.d/default.template
 
 # Create nginx pid directory
 RUN mkdir -p /run/nginx
+
+# Add script to replace environment variables
+RUN echo $'\
+#!/bin/sh\n\
+envsubst "$(env | cut -d= -f1 | sed -e '"'"'s/^/\$/'"'"')" < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf\n\
+nginx -g "daemon off;"\
+' > /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
 
 # Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s \
@@ -37,4 +44,5 @@ HEALTHCHECK --interval=30s --timeout=3s \
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# Use the script as entrypoint
+CMD ["/docker-entrypoint.sh"]
