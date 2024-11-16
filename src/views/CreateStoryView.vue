@@ -52,7 +52,7 @@ import type { CreateStoryData, Category } from '@/types'
 const router = useRouter()
 const title = ref('')
 const content = ref('')
-const categoryId = ref<number>()
+const categoryId = ref<string>()
 const categories = ref<Category[]>([])
 const loading = ref(false)
 

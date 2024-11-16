@@ -64,7 +64,7 @@ const router = useRouter()
 const route = useRoute()
 const title = ref('')
 const content = ref('')
-const categoryId = ref<number>()
+const categoryId = ref<string>()
 const categories = ref<Category[]>([])
 const loading = ref(true)
 
@@ -79,7 +79,7 @@ function stripTrixContent(content: string): string {
 onMounted(async () => {
   try {
     const [storyData, categoriesData] = await Promise.all([
-      getStory(Number(route.params.id)),
+      getStory(String(route.params.id)),
       getCategories(),
     ])
     const cleanContent = stripTrixContent(storyData.attributes.content)
@@ -98,7 +98,7 @@ async function handleSubmit(status: 'draft' | 'published') {
   if (!categoryId.value) return
   loading.value = true
   try {
-    await updateStory(Number(route.params.id), {
+    await updateStory(String(route.params.id), {
       title: title.value,
       content: content.value,
       category_id: categoryId.value,
@@ -116,7 +116,7 @@ async function confirmDelete() {
   if (confirm('Are you sure you want to delete this story? This action cannot be undone.')) {
     loading.value = true
     try {
-      await deleteStory(Number(route.params.id))
+      await deleteStory(String(route.params.id))
       router.push('/stories')
     } catch (error) {
       console.error('Failed to delete story:', error)

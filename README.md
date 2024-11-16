@@ -1,39 +1,38 @@
-# badeblog-frontend
+# Bade Blog Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+A Vue.js-based frontend application for a personal story-sharing platform, designed with accessibility and ease of use in mind for elderly users.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Story viewing with rich text formatting
+- Category-based story organization (Stories, Blog, Memories)
+- Photo integration with stories
+- Accessible UI optimized for elderly users
+- Member accounts for viewing and commenting
 
-## Type Support for `.vue` Imports in TS
+## Tech Stack
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Vue.js 3 with Composition API
+- TypeScript
+- Tailwind CSS
+- Quill for rich text editing
 
-## Customize configuration
+## Getting Started
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+1. Install dependencies:
 
-## Project Setup
-
-```sh
 npm install
-```
 
-### Compile and Hot-Reload for Development
+2. Run development server:
 
-```sh
 npm run dev
-```
 
-### Type-Check, Compile and Minify for Production
+3. Build for production:
 
-```sh
 npm run build
-```
 
-### Lint with [ESLint](https://eslint.org/)
+## Docker Support
 
-```sh
-npm run lint
-```
+Build and run with Docker:
+
+docker-compose up --build
