@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Story, CreateStoryData } from '@/types'
+import type { Story, CreateStoryData, ApiError } from '@/types'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
@@ -111,8 +111,14 @@ export const getStoryComments = async (storyId: string) => {
 }
 
 export const updateStory = async (id: string, storyData: CreateStoryData) => {
-  const response = await api.put(`/stories/${id}`, storyData)
-  return response.data
+  try {
+    const response = await api.put(`/stories/${id}`, { story: storyData })
+    return response.data
+  } catch (err) {
+    const error = err as { response?: { data: ApiError } }
+    console.error('API Error:', error.response?.data || error)
+    throw error
+  }
 }
 
 export const deleteStory = async (id: string) => {

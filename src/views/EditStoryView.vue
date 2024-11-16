@@ -58,7 +58,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { getStory, updateStory, getCategories } from '@/services/api'
 import { deleteStory } from '@/services/api'
 import RichTextEditor from '@/components/RichTextEditor.vue'
-import type { Category } from '@/types'
+import type { Category, ApiError } from '@/types'
 
 const router = useRouter()
 const route = useRoute()
@@ -68,25 +68,18 @@ const categoryId = ref<string>()
 const categories = ref<Category[]>([])
 const loading = ref(true)
 
-function stripTrixContent(content: string): string {
-  if (!content) return ''
-  const temp = document.createElement('div')
-  temp.innerHTML = content
-  const trixContent = temp.querySelector('.trix-content')
-  return trixContent ? trixContent.innerHTML : content
-}
-
 onMounted(async () => {
   try {
+    loading.value = true
     const [storyData, categoriesData] = await Promise.all([
       getStory(String(route.params.id)),
       getCategories(),
     ])
-    const cleanContent = stripTrixContent(storyData.attributes.content)
+
     title.value = storyData.attributes.title
-    content.value = cleanContent
-    categoryId.value = storyData.attributes['category-id']
-    categories.value = Array.isArray(categoriesData) ? categoriesData : []
+    content.value = storyData.attributes.content
+    categoryId.value = storyData.relationships.category.data.id
+    categories.value = categoriesData
   } catch (error) {
     console.error('Failed to load story or categories:', error)
   } finally {
@@ -96,17 +89,28 @@ onMounted(async () => {
 
 async function handleSubmit(status: 'draft' | 'published') {
   if (!categoryId.value) return
+
   loading.value = true
   try {
-    await updateStory(String(route.params.id), {
+    const storyData = {
       title: title.value,
       content: content.value,
       category_id: categoryId.value,
       status: status,
-    })
-    router.push(status === 'draft' ? '/drafts' : `/`)
-  } catch (error) {
-    console.error('Failed to update story:', error)
+    }
+
+    await updateStory(String(route.params.id), storyData)
+    router.push(status === 'draft' ? '/drafts' : '/')
+  } catch (err) {
+    const error = err as { response?: { data: ApiError } }
+    console.error('Failed to update story:', error.response?.data || error)
+    if (error.response?.data) {
+      const apiError = error.response.data
+      console.error(
+        'Server errors:',
+        apiError.errors || apiError.error || apiError.message || 'Unknown error',
+      )
+    }
   } finally {
     loading.value = false
   }

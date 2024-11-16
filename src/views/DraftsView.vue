@@ -10,7 +10,7 @@
       <div
         v-for="story in drafts"
         :key="story.id"
-        class="p-4 border rounded-lg shadow hover:shadow-md transition-shadow"
+        class="bg-white p-6 border rounded-lg shadow hover:shadow-md transition-shadow"
       >
         <h2 class="text-xl font-semibold">{{ story.attributes.title }}</h2>
         <p class="text-gray-600 mt-2">
@@ -19,7 +19,7 @@
         <div class="mt-4 flex gap-2">
           <router-link
             :to="`/stories/${story.id}/edit`"
-            class="bg-blue-500 text-white px-4 py-2 rounded"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
           >
             Edit
           </router-link>

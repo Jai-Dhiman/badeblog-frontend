@@ -9,29 +9,27 @@
     <div v-else class="space-y-8">
       <!-- Main Story Card -->
       <div class="bg-white rounded-xl shadow-lg p-8">
-        <!-- Story Header -->
         <div class="border-b pb-6 mb-6">
-          <h1 class="text-4xl font-bold mb-3">{{ story?.attributes.title }}</h1>
-          <div class="flex items-center text-gray-600 space-x-4 mb-6">
-            <span>{{ formatDate(story?.attributes['created-at']) }}</span>
-            <span>•</span>
-            <span>{{ categoryNames[story?.id || ''] || 'Loading...' }}</span>
-          </div>
-
-          <!-- Admin Controls -->
-          <div v-if="isAdmin" class="flex space-x-4">
+          <div class="flex justify-between items-center mb-3">
+            <h1 class="text-4xl font-bold">{{ story?.attributes.title }}</h1>
             <button
+              v-if="isAdmin"
               @click="handleEdit"
               class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
             >
               Edit Story
             </button>
           </div>
+          <div class="flex items-center text-gray-600 space-x-4">
+            <span>{{ formatDate(story?.attributes['created-at']) }}</span>
+            <span>•</span>
+            <span>{{ categoryNames[story?.id || ''] || 'Loading...' }}</span>
+          </div>
         </div>
 
         <!-- Story Content -->
         <div class="prose prose-lg max-w-none">
-          <div v-html="story?.attributes.content || ''" class="ql-editor action-text-content"></div>
+          <div v-html="story?.attributes.content || ''"></div>
         </div>
       </div>
 
@@ -281,18 +279,5 @@ const handleCommentDelete = async (commentId: string) => {
 .prose sub {
   vertical-align: sub;
   font-size: smaller;
-}
-
-.action-text-content > .trix-content {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.action-text-content > .trix-content > :first-child {
-  margin-top: 0 !important;
-}
-
-.action-text-content > .trix-content > :last-child {
-  margin-bottom: 0 !important;
 }
 </style>
