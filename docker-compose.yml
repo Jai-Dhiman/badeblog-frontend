@@ -13,7 +13,7 @@ services:
     environment:
       - NODE_ENV=production
       # Add your backend API URL here
-      - VITE_API_URL=http://localhost:3000
+      - VITE_API_URL=web-production-e3d6.up.railway.app
 
     # Optional: only if you want to connect to backend service
     depends_on:
