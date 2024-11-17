@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["src/**/__tests__/**/*", "src/components/**/*.vue", "src/**/*.ts", "src/**/*.vue"],
+  "exclude": [],
+  "compilerOptions": {
+    "composite": true,
+    "types": ["jest", "node"],
+    "noEmit": false
+  }
+}

@@ -6,6 +6,24 @@
     },
     {
       "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
     }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/__tests__/**/*.ts",
+    "src/__tests__/**/*.tsx"
   ]
 }
