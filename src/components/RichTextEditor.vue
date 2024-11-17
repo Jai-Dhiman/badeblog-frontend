@@ -5,7 +5,11 @@
     :toolbar="toolbarOptions"
     contentType="html"
     theme="snow"
-    class="h-[300px] mb-12 text-lg"
+    class="h-[300px] mb-12 text-lg editor-container"
+    :options="{
+      direction: 'ltr',
+      formats: ['direction'],
+    }"
     @textChange="handleTextChange"
     @ready="onEditorReady"
     @error="handleError"
@@ -141,17 +145,13 @@ onMounted(() => {
 const toolbarOptions = [
   [{ size: ['small', false, 'large', 'huge'] }],
   [{ header: [1, 2, 3, false] }],
-  ['bold', 'italic', 'underline', 'strike'],
-  [{ color: [] }, { background: [] }],
+  ['bold', 'italic'],
   [{ align: [] }],
   [{ indent: '-1' }, { indent: '+1' }],
   [{ list: 'ordered' }, { list: 'bullet' }],
-  ['blockquote', 'code-block'],
-  ['link'],
+  ['blockquote'],
   ['image'],
   [{ script: 'sub' }, { script: 'super' }],
-  [{ direction: 'rtl' }],
-  ['clean'],
 ]
 </script>
 
@@ -160,11 +160,19 @@ const toolbarOptions = [
   min-height: 200px;
   font-size: 16px;
   background-color: white !important;
+  direction: ltr !important;
 }
 
 .ql-editor {
   line-height: 1.6;
   background-color: white !important;
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* Fix for nested elements */
+.ql-editor * {
+  direction: inherit !important;
 }
 
 .ql-toolbar.ql-snow {
@@ -196,6 +204,8 @@ const toolbarOptions = [
 }
 
 .ql-editor p {
+  direction: ltr !important;
+  text-align: ltr !important;
   margin: 0;
   padding: 0;
 }

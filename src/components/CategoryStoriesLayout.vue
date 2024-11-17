@@ -18,10 +18,10 @@
       <div v-else-if="error" class="text-red-500 text-center py-4">
         {{ error }}
       </div>
-      <div v-if="stories.length === 0" class="text-center py-4">No stories found.</div>
+      <div v-if="paginatedStories.length === 0" class="text-center py-4">No stories found.</div>
       <div v-else class="space-y-8">
         <article
-          v-for="story in stories"
+          v-for="story in paginatedStories"
           :key="story.id"
           class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
         >
@@ -42,16 +42,23 @@
           </router-link>
         </article>
       </div>
+      <PaginationControls
+        v-if="stories.length > itemsPerPage"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @change-page="handlePageChange"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { getStoriesByCategory } from '@/services/api'
 import axios from 'axios'
 import type { Story } from '@/types'
+import PaginationControls from './PaginationControls.vue'
 
 const props = defineProps<{
   categoryId: string | number
@@ -62,6 +69,21 @@ const authStore = useAuthStore()
 const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
+const currentPage = ref(1)
+const itemsPerPage = 5
+
+const totalPages = computed(() => Math.ceil(stories.value.length / itemsPerPage))
+
+const paginatedStories = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return stories.value.slice(start, end)
+})
+
+function handlePageChange(page: number) {
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 function formatDate(dateString: string | undefined) {
   if (!dateString) return ''
