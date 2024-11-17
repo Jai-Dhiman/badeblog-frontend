@@ -147,7 +147,7 @@ async function fetchCategoryName(story: Story) {
   try {
     const categoryId = story.relationships.category.data.id
     const categoryResponse = await getCategory(categoryId)
-    categoryNames.value[story.id] = categoryResponse.data.attributes.name
+    categoryNames?.value[story.id] = categoryResponse.data.attributes.name
   } catch (error) {
     console.error('Error fetching category:', error)
     categoryNames.value[story.id] = 'Uncategorized'
