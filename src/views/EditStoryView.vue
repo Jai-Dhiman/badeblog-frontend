@@ -16,9 +16,15 @@
           </option>
         </select>
       </div>
+      <div
+        v-if="editorError"
+        class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+      >
+        {{ formatError(editorError) }}
+      </div>
       <div>
         <label class="block mb-2 text-lg">Content</label>
-        <RichTextEditor v-model="content" class="mb-6" />
+        <RichTextEditor v-model="content" class="mb-6" @error="handleEditorError" />
       </div>
       <div class="flex gap-4">
         <button
@@ -67,10 +73,31 @@ const content = ref('')
 const categoryId = ref<string>()
 const categories = ref<Category[]>([])
 const loading = ref(true)
+const editorError = ref<ApiError | null>(null)
+const editorInitialized = ref(false)
+
+function formatError(error: ApiError): string {
+  if (error.errors?.length) {
+    return error.errors.join(', ')
+  }
+  return error.message || error.error || 'An unexpected error occurred'
+}
+
+function handleEditorError(error: unknown) {
+  console.error('Editor error:', error)
+  const apiError: ApiError = {
+    message:
+      error instanceof Error
+        ? error.message
+        : 'There was an error loading the editor. Please refresh the page.',
+  }
+  editorError.value = apiError
+}
 
 onMounted(async () => {
   try {
     loading.value = true
+
     const [storyData, categoriesData] = await Promise.all([
       getStory(String(route.params.id)),
       getCategories(),
@@ -80,8 +107,14 @@ onMounted(async () => {
     content.value = storyData.attributes.content
     categoryId.value = storyData.relationships.category.data.id
     categories.value = categoriesData
-  } catch (error) {
-    console.error('Failed to load story or categories:', error)
+
+    editorInitialized.value = true
+  } catch (err) {
+    console.error('Failed to load story or categories:', err)
+    const error = err as { response?: { data: ApiError } }
+    editorError.value = error.response?.data || {
+      message: 'Failed to load story data',
+    }
   } finally {
     loading.value = false
   }
@@ -91,6 +124,7 @@ async function handleSubmit(status: 'draft' | 'published') {
   if (!categoryId.value) return
 
   loading.value = true
+
   try {
     const storyData = {
       title: title.value,
@@ -103,14 +137,10 @@ async function handleSubmit(status: 'draft' | 'published') {
     router.push(status === 'draft' ? '/drafts' : '/')
   } catch (err) {
     const error = err as { response?: { data: ApiError } }
-    console.error('Failed to update story:', error.response?.data || error)
-    if (error.response?.data) {
-      const apiError = error.response.data
-      console.error(
-        'Server errors:',
-        apiError.errors || apiError.error || apiError.message || 'Unknown error',
-      )
+    editorError.value = error.response?.data || {
+      message: 'Failed to update story',
     }
+    console.error('Failed to update story:', editorError.value)
   } finally {
     loading.value = false
   }

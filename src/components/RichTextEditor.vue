@@ -8,6 +8,7 @@
     class="h-[300px] mb-12 text-lg"
     @textChange="handleTextChange"
     @ready="onEditorReady"
+    @error="handleError"
   />
 </template>
 
@@ -15,6 +16,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import type { ApiError } from '@/types'
 
 const props = defineProps<{
   modelValue: string
@@ -22,51 +24,43 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
+  (e: 'error', error: ApiError): void
 }>()
 
 const quillEditor = ref()
 const localContent = ref('')
 const editorReady = ref(false)
+const contentQueue = ref<string | null>(null)
 
-function normalizeHtml(html: string): string {
-  // Create a temporary div
-  const div = document.createElement('div')
-  div.innerHTML = html
+function handleError(error: unknown) {
+  const apiError: ApiError = {
+    message: error instanceof Error ? error.message : 'Editor initialization error',
+    errors: error instanceof Error ? [error.message] : ['Unknown editor error'],
+  }
+  console.error('Quill editor error:', apiError)
+  emit('error', apiError)
+}
 
-  // Function to clean text nodes
-  function cleanTextNodes(node: Node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      node.textContent = node.textContent?.replace(/\s+/g, ' ').trim() || ''
-    } else {
-      node.childNodes.forEach(cleanTextNodes)
-    }
+function setEditorContent(content: string) {
+  if (!quillEditor.value?.getQuill) {
+    contentQueue.value = content
+    return
   }
 
-  // Clean all text nodes
-  cleanTextNodes(div)
-
-  // Remove empty paragraphs and normalize spacing
-  const paragraphs = div.getElementsByTagName('p')
-  Array.from(paragraphs).forEach((p) => {
-    // Remove empty paragraphs except those with a single <br>
-    if (!p.textContent?.trim() && !p.querySelector('br')) {
-      p.remove()
+  try {
+    const quill = quillEditor.value.getQuill()
+    if (!quill?.root || !quill.emitter) {
+      contentQueue.value = content
+      return
     }
-    // Remove extra br tags
-    const brs = p.getElementsByTagName('br')
-    while (brs.length > 1) {
-      brs[0].remove()
-    }
-  })
 
-  // Get the cleaned HTML
-  const cleanedHtml = div.innerHTML
-    .replace(/<p>\s*<\/p>/g, '<p><br></p>') // Replace empty p with p containing br
-    .replace(/(<\/p>\s*<p>)/g, '</p><p>') // Remove extra spaces between paragraphs
-    .replace(/\n\s*\n/g, '\n') // Remove multiple newlines
-    .trim()
+    const cleanContent = extractContent(content)
 
-  return cleanedHtml
+    const delta = quill.clipboard.convert(cleanContent)
+    quill.setContents(delta, 'silent')
+  } catch (error) {
+    handleError(error)
+  }
 }
 
 function extractContent(html: string): string {
@@ -75,46 +69,74 @@ function extractContent(html: string): string {
   const div = document.createElement('div')
   div.innerHTML = html
 
-  // Look for trix-content
   const trixContent = div.querySelector('.trix-content')
   const content = trixContent ? trixContent.innerHTML : html
 
   return normalizeHtml(content)
 }
 
-onMounted(() => {
-  if (props.modelValue) {
-    localContent.value = extractContent(props.modelValue)
+function normalizeHtml(html: string): string {
+  const div = document.createElement('div')
+  div.innerHTML = html.trim()
+
+  const trixDivs = div.querySelectorAll('.trix-content')
+  trixDivs.forEach((trixDiv, index) => {
+    if (index > 0) {
+      const parent = trixDiv.parentNode
+      while (trixDiv.firstChild) {
+        parent?.insertBefore(trixDiv.firstChild, trixDiv)
+      }
+      trixDiv.remove()
+    }
+  })
+
+  return div.innerHTML
+}
+
+function onEditorReady() {
+  editorReady.value = true
+
+  if (contentQueue.value !== null) {
+    setTimeout(() => {
+      setEditorContent(contentQueue.value!)
+      contentQueue.value = null
+    }, 100)
   }
-})
+}
 
 watch(
   () => props.modelValue,
   (newValue) => {
-    if (!editorReady.value) return
-
-    const extractedContent = extractContent(newValue)
-    if (extractedContent !== localContent.value) {
-      localContent.value = extractedContent
+    if (!editorReady.value) {
+      console.log('Editor not ready, queueing content')
+      contentQueue.value = newValue
+      return
     }
+    setEditorContent(newValue)
   },
+  { immediate: true },
 )
 
-function onEditorReady() {
-  editorReady.value = true
-  if (props.modelValue) {
-    localContent.value = extractContent(props.modelValue)
+function handleTextChange() {
+  if (!quillEditor.value?.getQuill) return
+
+  try {
+    const quill = quillEditor.value.getQuill()
+    if (!quill?.root || !quill.emitter) return
+
+    const content = quill.root.innerHTML
+    const wrappedContent = `<div class="trix-content">${content}</div>`
+    emit('update:modelValue', wrappedContent)
+  } catch (error) {
+    handleError(error)
   }
 }
 
-function handleTextChange() {
-  if (!quillEditor.value) return
-
-  const content = quillEditor.value.getHTML()
-  const cleanedContent = normalizeHtml(content)
-  const wrappedContent = `<div class="trix-content">${cleanedContent}</div>`
-  emit('update:modelValue', wrappedContent)
-}
+onMounted(() => {
+  if (props.modelValue) {
+    contentQueue.value = props.modelValue
+  }
+})
 
 const toolbarOptions = [
   [{ size: ['small', false, 'large', 'huge'] }],
