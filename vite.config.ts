@@ -5,7 +5,6 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-
   return {
     plugins: [vue(), vueDevTools()],
     resolve: {
@@ -30,6 +29,9 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
+    },
+    define: {
+      'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL),
     },
   }
 })

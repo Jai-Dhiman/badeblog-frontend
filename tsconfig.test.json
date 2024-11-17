@@ -1,10 +1,11 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": ["src/**/__tests__/**/*", "src/components/**/*.vue", "src/**/*.ts", "src/**/*.vue"],
   "exclude": [],
   "compilerOptions": {
     "composite": true,
-    "types": ["jest", "node"],
-    "noEmit": false
-  }
+    "types": ["node", "jest"],
+    "outDir": "./dist-test",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo"
+  },
+  "include": ["src/**/__tests__/**/*", "src/**/*.spec.*", "src/**/*.test.*"]
 }
