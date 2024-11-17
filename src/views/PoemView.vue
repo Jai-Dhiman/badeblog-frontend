@@ -15,7 +15,7 @@ onMounted(async () => {
   try {
     const categories = await getCategories()
     const essayCategory = categories.find(
-      (c: Category) => c.attributes.name.toLowerCase() === 'poems',
+      (c: Category) => c.attributes.name.toLowerCase() === 'poem',
     )
     if (essayCategory) {
       categoryId.value = essayCategory.id
