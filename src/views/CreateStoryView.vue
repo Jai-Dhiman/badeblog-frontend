@@ -76,7 +76,7 @@ async function handleSubmit(status: 'draft' | 'published') {
       status: status,
     }
     await createStory(storyData)
-    router.push(status === 'draft' ? '/drafts' : '/stories')
+    router.push(status === 'draft' ? '/drafts' : '/')
   } catch (error) {
     console.error('Failed to create story:', error)
   } finally {
