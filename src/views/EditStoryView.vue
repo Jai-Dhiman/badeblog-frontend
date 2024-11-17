@@ -121,7 +121,7 @@ async function confirmDelete() {
     loading.value = true
     try {
       await deleteStory(String(route.params.id))
-      router.push('/stories')
+      router.push('/')
     } catch (error) {
       console.error('Failed to delete story:', error)
     } finally {
