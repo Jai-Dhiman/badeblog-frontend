@@ -20,6 +20,7 @@
     "@types/quill": "^2.0.14",
     "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.7.7",
+    "jwt-decode": "4.0.0",
     "pinia": "^2.2.6",
     "quill": "^2.0.2",
     "vue": "^3.5.12",

@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import type { RouteLocationNormalized } from 'vue-router'
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean
+    requiresAdmin?: boolean
+    guestOnly?: boolean
+  }
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,19 +91,67 @@ const router = createRouter({
       name: 'acknowledge',
       component: () => import('../views/AcknowledgeView.vue'),
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      redirect: '/',
+    },
   ],
 })
 
-router.beforeEach((to, _from, next) => {
+const isAuthenticated = (authStore: ReturnType<typeof useAuthStore>) => {
+  return !!authStore.token && !!authStore.user
+}
+
+const isAdmin = (authStore: ReturnType<typeof useAuthStore>) => {
+  return authStore.user?.role === 'admin'
+}
+
+const handleNavigation = (
+  to: RouteLocationNormalized,
+  authStore: ReturnType<typeof useAuthStore>,
+): string | true => {
+  if (to.meta.guestOnly && isAuthenticated(authStore)) {
+    return '/'
+  }
+
+  if (to.meta.requiresAuth && !isAuthenticated(authStore)) {
+    const loginPath = '/login'
+    const redirect = to.fullPath
+    return `${loginPath}?redirect=${encodeURIComponent(redirect)}`
+  }
+
+  if (to.meta.requiresAdmin && !isAdmin(authStore)) {
+    return '/'
+  }
+
+  return true
+}
+
+router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore()
 
-  if (to.meta.requiresAuth && !authStore.token) {
+  try {
+    if (!authStore.user && authStore.token) {
+      await authStore.initializeAuth()
+    }
+
+    const navigationResult = handleNavigation(to, authStore)
+    if (navigationResult === true) {
+      next()
+    } else {
+      next(navigationResult)
+    }
+  } catch (error) {
+    console.error('Navigation guard error:', error)
+    authStore.logout()
     next('/login')
-  } else if (to.meta.requiresAdmin && authStore.user?.role !== 'admin') {
-    next('/')
-  } else {
-    next()
   }
+})
+
+router.onError((error) => {
+  console.error('Router error:', error)
+  router.push('/')
 })
 
 export default router

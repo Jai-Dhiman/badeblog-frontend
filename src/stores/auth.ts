@@ -3,10 +3,36 @@ import { ref } from 'vue'
 import type { User } from '@/types'
 import { login } from '@/services/api'
 import { signup } from '@/services/api'
+import { jwtDecode } from 'jwt-decode'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const token = ref<string | null>(null)
+
+  async function initializeAuth() {
+    const storedToken = localStorage.getItem('token')
+    if (storedToken) {
+      try {
+        const decoded: any = jwtDecode(storedToken)
+
+        if (decoded.exp * 1000 < Date.now()) {
+          logout()
+          return
+        }
+
+        token.value = storedToken
+        user.value = {
+          id: decoded.user_id,
+          email: decoded.email,
+          name: decoded.name,
+          role: decoded.role,
+        }
+      } catch (error) {
+        console.error('Token validation error:', error)
+        logout()
+      }
+    }
+  }
 
   async function loginUser(email: string, password: string) {
     try {
@@ -56,5 +82,5 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('token')
   }
 
-  return { user, token, loginUser, logout, signupUser }
+  return { user, token, loginUser, logout, signupUser, initializeAuth }
 })

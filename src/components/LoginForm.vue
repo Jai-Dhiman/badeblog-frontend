@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import type { ApiError } from '@/types'
 
 const email = ref('')
@@ -41,15 +41,17 @@ const error = ref('')
 const isLoading = ref(false)
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 
 async function handleSubmit() {
-  error.value = '' // Clear any previous errors
+  error.value = ''
   isLoading.value = true
 
   try {
     const success = await authStore.loginUser(email.value, password.value)
     if (success) {
-      router.push('/')
+      const redirect = route.query.redirect as string
+      router.push(redirect || '/')
     } else {
       error.value = 'Invalid email or password'
     }
