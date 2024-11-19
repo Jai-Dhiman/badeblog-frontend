@@ -3,7 +3,6 @@
     ref="quillEditor"
     :content="localContent"
     :toolbar="toolbarOptions"
-    :modules="editorModules"
     contentType="html"
     theme="snow"
     class="h-[300px] mb-12 text-lg editor-container"
@@ -36,12 +35,12 @@ const contentQueue = ref<string | null>(null)
 const toolbarOptions = [
   [{ size: ['small', false, 'large', 'huge'] }],
   [{ header: [1, 2, 3, false] }],
-  [{ font: ['sans-serif', 'serif', 'monospace', 'Arial', 'Times New Roman', 'Courier New'] }],
   ['bold', 'italic', 'underline'],
   [{ align: [] }],
   [{ indent: '-1' }, { indent: '+1' }],
   [{ list: 'ordered' }, { list: 'bullet' }],
   ['blockquote'],
+  ['image'],
 ]
 
 function handleError(error: unknown) {
@@ -167,16 +166,5 @@ onMounted(() => {
 .ql-editor a {
   color: #2563eb;
   text-decoration: underline;
-}
-
-.ql-font-serif {
-  font-family: Georgia, Times, 'Times New Roman', serif;
-}
-
-.ql-font-monospace {
-  font-family:
-    Monaco,
-    Courier New,
-    monospace;
 }
 </style>
