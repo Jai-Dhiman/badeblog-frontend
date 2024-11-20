@@ -10,10 +10,15 @@ import { useAuthStore } from './stores/auth'
 const app = createApp(App)
 const pinia = createPinia()
 app.use(pinia)
-
-const authStore = useAuthStore()
-await authStore.initializeAuth()
-
-app.component('QuillEditor', QuillEditor)
-app.use(router)
-app.mount('#app')
+;(async () => {
+  const authStore = useAuthStore()
+  try {
+    await authStore.initializeAuth()
+  } catch (error) {
+    console.error('Auth initialization failed:', error)
+  } finally {
+    app.component('QuillEditor', QuillEditor)
+    app.use(router)
+    app.mount('#app')
+  }
+})()
