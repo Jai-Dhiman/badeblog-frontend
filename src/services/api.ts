@@ -135,3 +135,8 @@ export const deleteComment = async (storyId: string, commentId: string) => {
   const response = await api.delete(`/stories/${storyId}/comments/${commentId}`)
   return response.data
 }
+
+export const subscribeToNewStories = async (email: string) => {
+  const response = await api.post('/subscribers', { subscriber: { email } })
+  return response.data
+}

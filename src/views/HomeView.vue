@@ -6,7 +6,9 @@
         A place to share and preserve stories and other literary work
       </p>
     </header>
-
+    <div class="mt-12 mb-8">
+      <SubscriptionForm />
+    </div>
     <div class="mb-8">
       <div v-if="authStore.user?.role === 'admin'" class="text-center mb-6">
         <router-link
