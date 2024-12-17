@@ -11,11 +11,7 @@
           required
         />
       </div>
-      <button
-        type="submit"
-        :disabled="loading"
-        class="w-full bg-accent text-white px-4 py-2 rounded-lg hover:bg-opacity-90"
-      >
+      <button type="submit" :disabled="loading" class="btn btn-primary w-full">
         {{ loading ? 'Subscribing...' : 'Subscribe' }}
       </button>
       <p v-if="message" :class="[status === 'error' ? 'text-red-500' : 'text-green-500']">

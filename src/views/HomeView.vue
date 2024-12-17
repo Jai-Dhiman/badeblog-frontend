@@ -6,7 +6,7 @@
         A place to share and preserve stories and other literary work
       </p>
     </header>
-    <div class="mt-12 mb-8">
+    <div class="mt-8 mb-8">
       <SubscriptionForm />
     </div>
     <div class="mb-8">
