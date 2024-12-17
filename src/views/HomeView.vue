@@ -71,6 +71,7 @@ import { useAuthStore } from '@/stores/auth'
 import { getStories, getCategory } from '@/services/api'
 import type { Story } from '@/types'
 import PaginationControls from '@/components/PaginationControls.vue'
+import SubscriptionForm from '@/components/SubscriptionForm.vue'
 
 const authStore = useAuthStore()
 const stories = ref<Story[]>([])
