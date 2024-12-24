@@ -36,7 +36,7 @@ const toolbarOptions = [
   [{ size: ['small', false, 'large', 'huge'] }],
   [{ header: [1, 2, 3, false] }],
   ['bold', 'italic', 'underline'],
-  [{ align: [] }],
+  [{ align: ['', 'center', 'right', 'justify'] }],
   [{ indent: '-1' }, { indent: '+1' }],
   [{ list: 'ordered' }, { list: 'bullet' }],
   ['blockquote'],
@@ -166,5 +166,17 @@ onMounted(() => {
 .ql-editor a {
   color: #2563eb;
   text-decoration: underline;
+}
+
+.ql-editor .ql-align-center {
+  text-align: center;
+}
+
+.ql-editor .ql-align-right {
+  text-align: right;
+}
+
+.ql-editor .ql-align-justify {
+  text-align: justify;
 }
 </style>
