@@ -3,6 +3,10 @@ import type { Story, CreateStoryData, ApiError } from '@/types'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
 api.interceptors.request.use((config) => {
@@ -140,3 +144,5 @@ export const subscribeToNewStories = async (email: string) => {
   const response = await api.post('/subscribers', { subscriber: { email } })
   return response.data
 }
+
+export default api

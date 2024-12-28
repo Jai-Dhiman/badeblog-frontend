@@ -1,8 +1,8 @@
+// auth.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { User } from '@/types'
-import { login } from '@/services/api'
-import { signup } from '@/services/api'
+import { login, signup } from '@/services/api'
 import { jwtDecode } from 'jwt-decode'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -14,12 +14,10 @@ export const useAuthStore = defineStore('auth', () => {
     if (storedToken) {
       try {
         const decoded: any = jwtDecode(storedToken)
-
         if (decoded.exp * 1000 < Date.now()) {
           logout()
           return
         }
-
         token.value = storedToken
         user.value = {
           id: decoded.user_id,
@@ -76,11 +74,39 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function setToken(newToken: string) {
+    try {
+      const decoded: any = jwtDecode(newToken)
+      token.value = newToken
+      localStorage.setItem('token', newToken)
+
+      user.value = {
+        id: decoded.user_id,
+        email: decoded.email,
+        name: decoded.name,
+        role: 'user',
+      }
+      return true
+    } catch (error) {
+      console.error('Error setting token:', error)
+      logout()
+      return false
+    }
+  }
+
   function logout() {
     user.value = null
     token.value = null
     localStorage.removeItem('token')
   }
 
-  return { user, token, loginUser, logout, signupUser, initializeAuth }
+  return {
+    user,
+    token,
+    loginUser,
+    logout,
+    signupUser,
+    initializeAuth,
+    setToken,
+  }
 })
