@@ -17,14 +17,17 @@ const message = ref('Processing authentication...')
 
 onMounted(async () => {
   try {
+    console.log('URL search params:', window.location.search)
     const urlParams = new URLSearchParams(window.location.search)
     const token = urlParams.get('token')
+    console.log('Received token:', token)
 
     if (token) {
       await authStore.setToken(token)
       message.value = 'Authentication successful!'
       router.push('/')
     } else {
+      console.error('No token in URL params:', urlParams.toString())
       message.value = 'Authentication failed: No token received'
       setTimeout(() => router.push('/login'), 2000)
     }
