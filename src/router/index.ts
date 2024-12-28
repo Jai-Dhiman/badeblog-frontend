@@ -17,6 +17,13 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('../views/HomeView.vue'),
+      beforeEnter: (to) => {
+        if (to.query.unsubscribed === 'true') {
+          alert('You have been successfully unsubscribed.')
+        } else if (to.query.unsubscribe_error) {
+          alert('There was an error processing your unsubscribe request.')
+        }
+      },
     },
     {
       path: '/login',

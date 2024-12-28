@@ -17,10 +17,8 @@ const message = ref('Processing authentication...')
 
 onMounted(async () => {
   try {
-    console.log('URL search params:', window.location.search)
     const urlParams = new URLSearchParams(window.location.search)
     const token = urlParams.get('token')
-    console.log('Received token:', token)
 
     if (token) {
       await authStore.setToken(token)

@@ -41,7 +41,7 @@ const handleSubmit = async () => {
     email.value = ''
   } catch (err) {
     const error = err as { response?: { data: ApiError } }
-    message.value = error.response?.data?.message || 'Failed to subscribe. Please try again.'
+    message.value = error.response?.data?.message || 'Failed to subscribe or Already Subscribed.'
     status.value = 'error'
   } finally {
     loading.value = false
