@@ -68,21 +68,11 @@ const isLoading = ref(false)
 const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const apiUrl = import.meta.env.VITE_API_URL || 'https://web-production-e3d6.up.railway.app'
 
 const signInWithGoogle = () => {
-  console.log('API URL:', apiUrl)
-
-  if (!apiUrl) {
-    error.value = 'API URL is not configured'
-    return
-  }
-  try {
-    window.location.href = `${apiUrl}/auth/google_oauth2`
-  } catch (err) {
-    console.error('Redirect error:', err)
-    error.value = 'Failed to redirect to Google login'
-  }
+  console.log('Redirecting to Google auth at:', `${apiUrl}/auth/google_oauth2`)
+  window.location.href = `${apiUrl}/auth/google_oauth2`
 }
 
 async function handleSubmit() {
