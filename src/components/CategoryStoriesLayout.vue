@@ -14,7 +14,9 @@
         </router-link>
       </div>
 
-      <div v-if="loading" class="text-center py-4">Loading...</div>
+      <div v-if="loading" class="space-y-8">
+        <StorySkeletonLoader v-for="n in itemsPerPage" :key="n" />
+      </div>
       <div v-else-if="error" class="text-red-500 text-center py-4">
         {{ error }}
       </div>
@@ -59,6 +61,7 @@ import { getStoriesByCategory } from '@/services/api'
 import axios from 'axios'
 import type { Story } from '@/types'
 import PaginationControls from './PaginationControls.vue'
+import StorySkeletonLoader from '@/components/StorySkeletonLoader.vue'
 
 const props = defineProps<{
   categoryId: string | number
