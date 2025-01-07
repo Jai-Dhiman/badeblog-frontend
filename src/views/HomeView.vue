@@ -98,7 +98,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { getStories, getCategory, getSubscriberCount, getRecentComments } from '@/services/api'
-import type { Story } from '@/types'
+import type { Story, Comment } from '@/types'
 import PaginationControls from '@/components/PaginationControls.vue'
 import SubscriptionForm from '@/components/SubscriptionForm.vue'
 import StorySkeletonLoader from '@/components/StorySkeletonLoader.vue'
