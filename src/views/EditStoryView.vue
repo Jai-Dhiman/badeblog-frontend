@@ -44,7 +44,6 @@
         >
           {{ loading ? 'Publishing...' : 'Publish Story' }}
         </button>
-
         <button
           type="button"
           @click="confirmDelete"
@@ -54,6 +53,22 @@
           Delete Story
         </button>
       </div>
+      <div class="mt-4">
+        <button
+          @click="showNotificationModal = true"
+          v-if="storyId"
+          class="bg-green-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-600 transition-colors"
+        >
+          Send to Subscribers
+        </button>
+      </div>
+
+      <NotificationModal
+        :show="showNotificationModal"
+        :story-id="storyId"
+        @close="showNotificationModal = false"
+        @sent="handleNotificationSent"
+      />
     </div>
   </div>
 </template>
@@ -65,6 +80,7 @@ import { getStory, updateStory, getCategories } from '@/services/api'
 import { deleteStory } from '@/services/api'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 import type { Category, ApiError } from '@/types'
+import NotificationModal from '@/components/NotificationModal.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -75,6 +91,24 @@ const categories = ref<Category[]>([])
 const loading = ref(true)
 const editorError = ref<ApiError | null>(null)
 const editorInitialized = ref(false)
+const storyId = ref<string>('')
+const showNotificationModal = ref(false)
+const showSuccess = ref(false)
+const fadeOut = ref(false)
+
+const handleNotificationSent = () => {
+  showNotificationModal.value = false
+  showSuccess.value = true
+
+  setTimeout(() => {
+    fadeOut.value = true
+  }, 2000)
+
+  setTimeout(() => {
+    showSuccess.value = false
+    fadeOut.value = false
+  }, 2300)
+}
 
 function formatError(error: ApiError): string {
   if (error.errors?.length) {
@@ -97,9 +131,10 @@ function handleEditorError(error: unknown) {
 onMounted(async () => {
   try {
     loading.value = true
+    storyId.value = String(route.params.id)
 
     const [storyData, categoriesData] = await Promise.all([
-      getStory(String(route.params.id)),
+      getStory(storyId.value),
       getCategories(),
     ])
 
@@ -160,3 +195,13 @@ async function confirmDelete() {
   }
 }
 </script>
+
+<style scoped>
+.transition-opacity {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+</style>

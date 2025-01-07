@@ -163,4 +163,8 @@ export const subscribeToNewStories = async (email: string) => {
   return response.data
 }
 
+export const sendStoryNotification = async (storyId: number | string, message: string) => {
+  return api.post(`/stories/${storyId}/send_notification`, { message })
+}
+
 export default api
