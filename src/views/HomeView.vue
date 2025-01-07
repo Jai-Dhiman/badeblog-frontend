@@ -19,7 +19,9 @@
         </router-link>
       </div>
 
-      <div v-if="loading" class="text-center py-4">Loading stories...</div>
+      <div v-if="loading" class="space-y-8">
+        <StorySkeletonLoader v-for="n in itemsPerPage" :key="n" />
+      </div>
 
       <div v-else-if="error" class="text-red-500 text-center py-4">
         {{ error }}
@@ -72,6 +74,7 @@ import { getStories, getCategory } from '@/services/api'
 import type { Story } from '@/types'
 import PaginationControls from '@/components/PaginationControls.vue'
 import SubscriptionForm from '@/components/SubscriptionForm.vue'
+import StorySkeletonLoader from '@/components/StorySkeletonLoader.vue'
 
 const authStore = useAuthStore()
 const stories = ref<Story[]>([])
