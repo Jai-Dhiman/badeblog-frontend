@@ -6,9 +6,7 @@
         A place to share and preserve stories and other literary work
       </p>
     </header>
-    <div class="mt-8 mb-8">
-      <SubscriptionForm />
-    </div>
+
     <div class="mb-8">
       <div v-if="authStore.user?.role === 'admin'" class="text-center mb-6">
         <router-link
@@ -17,6 +15,35 @@
         >
           New Story
         </router-link>
+      </div>
+
+      <div v-if="authStore.user?.role === 'admin'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <h3 class="text-lg font-semibold mb-2">Total Subscribers</h3>
+          <p class="text-3xl font-bold text-primary">{{ subscriberCount }}</p>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <h3 class="text-lg font-semibold mb-2">Recent Comments</h3>
+          <div v-if="recentComments.length > 0">
+            <div
+              v-for="comment in recentComments"
+              :key="comment.id"
+              class="mb-3 p-2 bg-white rounded"
+            >
+              <p class="text-sm text-gray-600">
+                {{ comment.attributes['user-info'].name }} on
+                {{ new Date(comment.attributes['created-at']).toLocaleDateString() }} to
+                {{ comment.attributes['story-info'].title }}
+              </p>
+              <p class="mt-1">{{ comment.attributes.content }}</p>
+            </div>
+          </div>
+          <p v-else class="text-gray-500">No recent comments</p>
+        </div>
+      </div>
+
+      <div v-if="authStore.user?.role != 'admin'" class="mt-8 mb-8">
+        <SubscriptionForm />
       </div>
 
       <div v-if="loading" class="space-y-8">
@@ -70,7 +97,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { getStories, getCategory } from '@/services/api'
+import { getStories, getCategory, getSubscriberCount, getRecentComments } from '@/services/api'
 import type { Story } from '@/types'
 import PaginationControls from '@/components/PaginationControls.vue'
 import SubscriptionForm from '@/components/SubscriptionForm.vue'
@@ -83,6 +110,8 @@ const error = ref('')
 const categoryNames = ref<Record<string, string>>({})
 const currentPage = ref(1)
 const itemsPerPage = 5
+const subscriberCount = ref(0)
+const recentComments = ref<Comment[]>([])
 
 const totalPages = computed(() => Math.ceil(stories.value.length / itemsPerPage))
 
@@ -91,6 +120,21 @@ const paginatedStories = computed(() => {
   const end = start + itemsPerPage
   return stories.value.slice(start, end)
 })
+
+const fetchAdminStats = async () => {
+  if (authStore.user?.role === 'admin') {
+    try {
+      const [countResponse, commentsResponse] = await Promise.all([
+        getSubscriberCount(),
+        getRecentComments(),
+      ])
+      subscriberCount.value = countResponse.count
+      recentComments.value = commentsResponse.data
+    } catch (error) {
+      console.error('Error fetching admin stats:', error)
+    }
+  }
+}
 
 function handlePageChange(page: number) {
   currentPage.value = page
@@ -121,6 +165,7 @@ onMounted(async () => {
   try {
     loading.value = true
     const data = await getStories()
+    fetchAdminStats()
     stories.value = Array.isArray(data) ? data : []
 
     await Promise.all(stories.value.map(fetchCategoryName))

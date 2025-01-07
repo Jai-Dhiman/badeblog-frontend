@@ -65,6 +65,10 @@ export interface Comment {
       id: string
       name: string
     }
+    'story-info': {
+      id: string
+      title: string
+    }
   }
 }
 

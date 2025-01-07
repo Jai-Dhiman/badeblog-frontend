@@ -140,6 +140,24 @@ export const deleteComment = async (storyId: string, commentId: string) => {
   return response.data
 }
 
+export const getSubscriberCount = async () => {
+  const response = await api.get('/subscribers/count', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  })
+  return response.data
+}
+
+export const getRecentComments = async () => {
+  const response = await api.get('/comments/recent', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  })
+  return response.data
+}
+
 export const subscribeToNewStories = async (email: string) => {
   const response = await api.post('/subscribers', { subscriber: { email } })
   return response.data
