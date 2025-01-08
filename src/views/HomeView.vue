@@ -18,10 +18,21 @@
       </div>
 
       <div v-if="authStore.user?.role === 'admin'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="p-4 bg-gray-50 rounded-lg">
-          <h3 class="text-lg font-semibold mb-2">Total Subscribers</h3>
-          <p class="text-3xl font-bold text-primary">{{ subscriberCount }}</p>
+    <div class="p-4 bg-gray-50 rounded-lg">
+      <h3 class="text-lg font-semibold mb-2">Subscribers</h3>
+      <p class="text-3xl font-bold text-primary mb-4">{{ subscriberCount }}</p>
+
+      <div class="mt-4">
+        <h4 class="text-md font-semibold mb-2">Subscriber List</h4>
+        <div class="max-h-60 overflow-y-auto">
+          <ul class="space-y-1">
+            <li v-for="email in subscribers" :key="email" class="text-sm text-gray-600">
+              {{ email }}
+            </li>
+          </ul>
         </div>
+      </div>
+    </div>
         <div class="p-4 bg-gray-50 rounded-lg">
           <h3 class="text-lg font-semibold mb-2">Recent Comments</h3>
           <div v-if="recentComments.length > 0">
@@ -97,7 +108,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { getStories, getCategory, getSubscriberCount, getRecentComments } from '@/services/api'
+import { getStories, getCategory, getSubscribers, getRecentComments } from '@/services/api'
 import type { Story, Comment } from '@/types'
 import PaginationControls from '@/components/PaginationControls.vue'
 import SubscriptionForm from '@/components/SubscriptionForm.vue'
@@ -111,6 +122,7 @@ const categoryNames = ref<Record<string, string>>({})
 const currentPage = ref(1)
 const itemsPerPage = 5
 const subscriberCount = ref(0)
+const subscribers = ref<string[]>([])
 const recentComments = ref<Comment[]>([])
 
 const totalPages = computed(() => Math.ceil(stories.value.length / itemsPerPage))
@@ -124,11 +136,12 @@ const paginatedStories = computed(() => {
 const fetchAdminStats = async () => {
   if (authStore.user?.role === 'admin') {
     try {
-      const [countResponse, commentsResponse] = await Promise.all([
-        getSubscriberCount(),
+      const [subscribersResponse, commentsResponse] = await Promise.all([
+        getSubscribers(),
         getRecentComments(),
       ])
-      subscriberCount.value = countResponse.count
+      subscriberCount.value = subscribersResponse.count
+      subscribers.value = subscribersResponse.subscribers
       recentComments.value = commentsResponse.data
     } catch (error) {
       console.error('Error fetching admin stats:', error)
