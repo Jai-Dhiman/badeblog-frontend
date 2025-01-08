@@ -32,7 +32,7 @@
             </p>
             <p class="mb-4 text-xl">
               I shall be doing injustice if I don't mention my grandson, Jai Dhiman. I am happy to
-              say that this beautiful website has been developed. Thinking of it's design and
+              say that this beautiful website has been developed by him. Thinking of it's design and
               awesome architecture took about a fortnight of his precious time. May God bless him.
             </p>
             <p class="mb-4 text-xl">
