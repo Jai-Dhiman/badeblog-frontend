@@ -25,10 +25,15 @@
             </p>
             <p class="mb-4 text-xl">
               My interest of writing re-instilled when I came to the USA to visit my elder son and
-              daughter and their families; and my grand-daughter asked me to write on certain topics
-              in English language, though my work carried out earlier is in Hindi language. With
-              this, the issue of compilation of my authoring came up for discussion when one of my
-              grandsons offered to create a website; and this beautiful internet site is before you.
+              daughter and their families; and my grand-daughter, Surbhi Dhiman, asked me to write
+              on certain topics in English language, though my work carried out earlier is in Hindi
+              language. With this, the issue of compilation of my compositions came up for
+              discussion and for that this internet site is before you.
+            </p>
+            <p class="mb-4 text-xl">
+              I shall be doing injustice if I don't mention my grandson, Jai Dhiman. I am happy to
+              say that this beautiful website has been developed. Thinking of it's design and
+              awesome architecture took about a fortnight of his precious time. May God bless him.
             </p>
             <p class="mb-4 text-xl">
               I take this opportunity to express my heart-felt gratitude to my colleagues, friends,
