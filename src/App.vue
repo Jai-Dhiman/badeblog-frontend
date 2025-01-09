@@ -52,12 +52,12 @@
                     >
                       Plays
                     </router-link>
-                    <router-link
+                    <!-- <router-link
                       to="/others"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Other
-                    </router-link>
+                    </router-link> -->
                   </div>
                 </div>
               </div>
