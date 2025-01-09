@@ -29,12 +29,6 @@
                 >
                   <div class="py-1">
                     <router-link
-                      to="/essays"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Essays
-                    </router-link>
-                    <router-link
                       to="/articles"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
